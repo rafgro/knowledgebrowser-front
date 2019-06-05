@@ -1,1 +1,0 @@
-define("ace/snippets/mysql",["require","exports","module"],function(e,o,t){"use strict";o.snippetText=void 0,o.scope="mysql"}),window.require(["ace/snippets/mysql"],function(e){"object"==typeof module&&"object"==typeof exports&&module&&(module.exports=e)});

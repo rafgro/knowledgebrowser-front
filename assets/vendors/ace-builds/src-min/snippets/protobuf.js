@@ -1,1 +1,0 @@
-define("ace/snippets/protobuf",["require","exports","module"],function(e,o,t){"use strict";o.snippetText="",o.scope="protobuf"}),window.require(["ace/snippets/protobuf"],function(e){"object"==typeof module&&"object"==typeof exports&&module&&(module.exports=e)});

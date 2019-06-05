@@ -1,1 +1,0 @@
-define("ace/snippets/json",["require","exports","module"],function(e,o,t){"use strict";o.snippetText=void 0,o.scope="json"}),window.require(["ace/snippets/json"],function(e){"object"==typeof module&&"object"==typeof exports&&module&&(module.exports=e)});

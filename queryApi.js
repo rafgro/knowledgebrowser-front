@@ -14,12 +14,22 @@ exports.doYourJob = function( query ) {
             else {
                 let toResolve = [];
                 let today = Date.now();
-                JSON.parse(body).results.forEach( element => {
-                    let thatDate = (new Date(element.date)).getTime();
-                    let days = (today - thatDate) / 86400000;
-                    toResolve.push( { "title": unescape(element.title), "abstract": unescape(element.abstract), "date": days.toFixed(0)+" days ago" } );
-                } );
-                resolve( toResolve );
+                let results = JSON.parse(body).results;
+                
+                if( results != null ) {
+                    if( results.hasOwnProperty('message') ) { reject("No results."); }
+                    else {
+                        results.forEach( element => {
+                            let thatDate = (new Date(element.date)).getTime();
+                            let days = (today - thatDate) / 86400000;
+                            toResolve.push( { "title": element.title, "abstract": element.abstract, "date": days.toFixed(0)+" days ago" } );
+                        } );
+                        resolve( toResolve );
+                    }
+                }
+                else {
+                    reject( "Sorry, we've encountered an error." );
+                }
             }
 
         } );

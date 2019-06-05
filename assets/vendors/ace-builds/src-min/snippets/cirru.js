@@ -1,1 +1,0 @@
-define("ace/snippets/cirru",["require","exports","module"],function(e,o,t){"use strict";o.snippetText=void 0,o.scope="cirru"}),window.require(["ace/snippets/cirru"],function(e){"object"==typeof module&&"object"==typeof exports&&module&&(module.exports=e)});

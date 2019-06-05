@@ -1,1 +1,0 @@
-define("ace/snippets/stylus",["require","exports","module"],function(e,t,s){"use strict";t.snippetText=void 0,t.scope="stylus"}),window.require(["ace/snippets/stylus"],function(e){"object"==typeof module&&"object"==typeof exports&&module&&(module.exports=e)});

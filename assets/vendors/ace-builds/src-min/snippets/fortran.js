@@ -1,1 +1,0 @@
-define("ace/snippets/fortran",["require","exports","module"],function(e,o,t){"use strict";o.snippetText=void 0,o.scope="fortran"}),window.require(["ace/snippets/fortran"],function(e){"object"==typeof module&&"object"==typeof exports&&module&&(module.exports=e)});

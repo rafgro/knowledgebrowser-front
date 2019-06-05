@@ -1,1 +1,0 @@
-define("ace/snippets/asl",["require","exports","module"],function(e,o,t){"use strict";o.snippetText=void 0,o.scope="asl"}),window.require(["ace/snippets/asl"],function(e){"object"==typeof module&&"object"==typeof exports&&module&&(module.exports=e)});

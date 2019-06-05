@@ -1,1 +1,0 @@
-define("ace/snippets/ocaml",["require","exports","module"],function(e,o,t){"use strict";o.snippetText=void 0,o.scope="ocaml"}),window.require(["ace/snippets/ocaml"],function(e){"object"==typeof module&&"object"==typeof exports&&module&&(module.exports=e)});

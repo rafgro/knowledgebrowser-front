@@ -1,1 +1,0 @@
-define("ace/snippets/swift",["require","exports","module"],function(e,t,o){"use strict";t.snippetText=void 0,t.scope="swift"}),window.require(["ace/snippets/swift"],function(e){"object"==typeof module&&"object"==typeof exports&&module&&(module.exports=e)});

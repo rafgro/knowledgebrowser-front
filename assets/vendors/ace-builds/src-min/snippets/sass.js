@@ -1,1 +1,0 @@
-define("ace/snippets/sass",["require","exports","module"],function(e,s,o){"use strict";s.snippetText=void 0,s.scope="sass"}),window.require(["ace/snippets/sass"],function(e){"object"==typeof module&&"object"==typeof exports&&module&&(module.exports=e)});
