@@ -16,7 +16,7 @@ app.get('/', function (req, res) {
   
   let hrstart = process.hrtime();
 
-  queryApi.doYourJob( 'gravity' )
+  queryApi.doYourJob( 'exoplanets' )
   .then( results => {
 
     let hrend = process.hrtime(hrstart);

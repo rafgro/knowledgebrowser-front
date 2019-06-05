@@ -13,8 +13,11 @@ exports.doYourJob = function( query ) {
             }
             else {
                 let toResolve = [];
+                let today = Date.now();
                 JSON.parse(body).results.forEach( element => {
-                    toResolve.push( { "title": unescape(element.title), "abstract": unescape(element.abstract), "date": element.date } );
+                    let thatDate = (new Date(element.date)).getTime();
+                    let days = (today - thatDate) / 86400000;
+                    toResolve.push( { "title": unescape(element.title), "abstract": unescape(element.abstract), "date": days.toFixed(0)+" days ago" } );
                 } );
                 resolve( toResolve );
             }
