@@ -3,5 +3,13 @@
 {{/each}}
 
 {{#each publication}}
-<div class="row"><div class="col-md-12 equel-grid"><div class="grid"><div class="grid-body"><div class="vertical-timeline-wrapper"><div class="timeline-vertical dashboard-timeline"><div class="activity-log"><p class="log-name">{{{title}}}</p><div class="log-details">{{abstract}}</div><small class="log-time">{{date}}</small></div></div></div></div></div></div></div>
+<div class="row"><div class="col-md-12 equel-grid"><div class="grid"><div class="grid-body"><div class="vertical-timeline-wrapper"><div class="timeline-vertical dashboard-timeline"><div class="activity-log"><p class="log-name">{{{title}}}</p><div class="log-details">{{abstract}}</div><small class="log-time">{{relevancy}}<br/>{{date}}</small></div></div></div></div></div></div></div>
 {{/each}}
+
+{{#if pagination}}
+<div class="dataTables_paginate paging_simple_numbers" id="sample-data-table_paginate"><ul class="pagination"><li class="paginate_button page-item previous {{pagination_prev_activity}}" id="sample-data-table_previous"><a href="{{{pagination_prev_link}}}" class="page-link">Previous</a></li>
+{{#each pagination}}
+<li class="paginate_button page-item {{activity}}"><a href="{{{link}}}" class="page-link">{{number}}</a></li>
+{{/each}}
+<li class="paginate_button page-item next {{pagination_next_activity}}" id="sample-data-table_next"><a href="{{{pagination_next_link}}}" class="page-link">Next</a></li></ul></div>
+{{/if}}
