@@ -26,7 +26,7 @@ exports.doYourJob = function( query, offset=0 ) {
                             let days = (today - thatDate) / 86400000;
                             let datemy = days.toFixed(0)+" days ago";
                             let hours = ((today - thatDate) / 3600000);
-                            if( days <= 1 ) datemy = hours+" hours ago";
+                            if( days <= 1 ) datemy = hours.toFixed(0)+" hours ago";
                             if( hours <= 1 ) datemy = "less than hour ago";
                             if( days <= 7 ) datemy = '<strong>'+datemy+'</strong>';
                             toResolve.push( { "title": element.title, "abstract": element.abstract,

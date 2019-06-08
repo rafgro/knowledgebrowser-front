@@ -14,19 +14,19 @@ app.use('/assets', express.static('assets'));
 app.use(express.static(__dirname));
 
 const {shiphold} = require('ship-hold');
-/*const sh = shiphold({
+const sh = shiphold({
     host     : process.env.RDS_HOSTNAME,
     user     : process.env.RDS_USERNAME,
     password : process.env.RDS_PASSWORD,
     port     : process.env.RDS_PORT,
     database : 'postgres'
-});*/
-const sh = shiphold({
+});
+/*const sh = shiphold({
     host     : '127.0.0.1',
     user     : 'crawler',
     password : 'blackseo666',
     database : 'preprint-crawls'
-});
+});*/
 
 app.get('/search', function (req, res) {
   
@@ -64,7 +64,7 @@ app.get('/search', function (req, res) {
 });
 
 app.get('/stats', function(req,res) {
-  stats.doYourJob(sh).then( results => {
+  stats.doYourJob().then( results => {
     res.render( 'preprint-search', { "title": "Knowledge Browser", "message": results.messages } );
   })
   .catch( e=> {
