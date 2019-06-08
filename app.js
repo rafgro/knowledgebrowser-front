@@ -2,7 +2,8 @@
 
 const express = require('express'),
       exphbs  = require('express-handlebars'),
-      queryApi = require('./queryApi');
+      queryApi = require('./queryApi'),
+      stats = require('./stats');
 
 const app = express();
 
@@ -11,6 +12,21 @@ app.set('view engine', 'handlebars');
 
 app.use('/assets', express.static('assets'));
 app.use(express.static(__dirname));
+
+const {shiphold} = require('ship-hold');
+/*const sh = shiphold({
+    host     : process.env.RDS_HOSTNAME,
+    user     : process.env.RDS_USERNAME,
+    password : process.env.RDS_PASSWORD,
+    port     : process.env.RDS_PORT,
+    database : 'postgres'
+});*/
+const sh = shiphold({
+    host     : '127.0.0.1',
+    user     : 'crawler',
+    password : 'blackseo666',
+    database : 'preprint-crawls'
+});
 
 app.get('/search', function (req, res) {
   
@@ -42,11 +58,18 @@ app.get('/search', function (req, res) {
         "searchquery": query } );
     });
   } else {
-    res.render('preprint-search',
-        { "message": [ { "text": "Hi!" } ],
-        "title": "Knowledge Browser" } );
+    res.render( 'preprint-search', { "title": "Knowledge Browser", "message": [ { "text": "Hi!" }] } );
   }
 
+});
+
+app.get('/stats', function(req,res) {
+  stats.doYourJob(sh).then( results => {
+    res.render( 'preprint-search', { "title": "Knowledge Browser", "message": results.messages } );
+  })
+  .catch( e=> {
+    res.render( 'preprint-search', { "title": "Knowledge Browser", "message": [ { "text": e } ] } );
+  })
 });
 
 var port = process.env.PORT || 80;
