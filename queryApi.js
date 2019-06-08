@@ -5,7 +5,7 @@ exports.doYourJob = function( query, offset=0 ) {
 
     return new Promise( ( resolve, reject ) => {
 
-        request('http://knowbro-env.223darfg3a.us-east-2.elasticbeanstalk.com:3000/api/search?q='+query+'&offset='+offset,
+        request('http://knowbro-env.223darfg3a.us-east-2.elasticbeanstalk.com:3000/api/search?q='+query+'&offset='+offset+'&freshmode=1',
           {timeout: 20000}, (error, response, body) => {
 
             if( error ) {
@@ -24,8 +24,13 @@ exports.doYourJob = function( query, offset=0 ) {
                         results.forEach( element => {
                             let thatDate = (new Date(element.date)).getTime();
                             let days = (today - thatDate) / 86400000;
+                            let datemy = days.toFixed(0)+" days ago";
+                            let hours = ((today - thatDate) / 3600000);
+                            if( days <= 1 ) datemy = hours+" hours ago";
+                            if( hours <= 1 ) datemy = "less than hour ago";
+                            if( days <= 7 ) datemy = '<strong>'+datemy+'</strong>';
                             toResolve.push( { "title": element.title, "abstract": element.abstract,
-                              "date": days.toFixed(0)+" days ago", "relevancy": element.relativeWeight+"/10 relevant" } );
+                              "date": datemy, "relevancy": element.relativeWeight+"/10 relevant" } );
                         } );
 
                         let paginationObj = {
@@ -44,10 +49,10 @@ exports.doYourJob = function( query, offset=0 ) {
                         let maxButtons = 0;
                         let maxButtonsLimit = 9;
                         let starter = 1;
-                        if( intOffset > 75 && allresults > 100 ) { starter = 9; maxButtonsLimit = 10; }
-                        if( intOffset > 175 && allresults > 200 ) { starter = 19; maxButtonsLimit = 10; }
-                        if( intOffset > 275 && allresults > 300 ) { starter = 29; maxButtonsLimit = 10; }
-                        if( intOffset > 375 && allresults > 400 ) { starter = 39; maxButtonsLimit = 10; }
+                        if( intOffset > 85 && allresults > 90 ) { starter = 9; maxButtonsLimit = 11; }
+                        if( intOffset > 185 && allresults > 190 ) { starter = 19; maxButtonsLimit = 11; }
+                        if( intOffset > 285 && allresults > 290 ) { starter = 29; maxButtonsLimit = 11; }
+                        if( intOffset > 385 && allresults > 390 ) { starter = 39; maxButtonsLimit = 11; }
                         for( let i = starter; i < ((allresults/10)+1); i++ ) {
                             let whatActivity = '';
                             if( (intOffset+10)/10 == i ) whatActivity = 'active';
