@@ -48,7 +48,9 @@ app.get('/search', function (req, res) {
           "pagination_prev_link": results.pagination.prev_link,
           "pagination_next_activity": results.pagination.next_activity,
           "pagination_next_link": results.pagination.next_link,
-          "pagination": results.pagination.pages } );
+          "pagination": results.pagination.pages,
+          "irrelevant_card1": results.irrelevantCard1,
+          "irrelevant_card2": results.irrelevantCard2 } );
         
     })
     .catch( e=> {

@@ -21,17 +21,31 @@ exports.doYourJob = function( query, offset=0 ) {
                     if( results.hasOwnProperty('message') ) { reject("No results."); }
                     else {
 
+                        let doWeHideIrrelevant = false;
+                        if( results[0].relativeWeight >= 4 ) doWeHideIrrelevant = true;
+                        let doWeShowIrrelevantCard = false;
+
                         results.forEach( element => {
                             let thatDate = (new Date(element.date)).getTime();
                             let days = (today - thatDate) / 86400000;
                             let datemy = days.toFixed(0)+" days ago";
                             let hours = ((today - thatDate) / 3600000);
-                            if( days <= 1 ) datemy = hours.toFixed(0)+" hours ago";
-                            if( hours <= 1 ) datemy = "less than hour ago";
-                            if( days <= 7 ) datemy = '<strong>'+datemy+'</strong>';
+                            if( days <= 1.25 ) datemy = hours.toFixed(0)+" hours ago";
+                            else if( days < 2 ) datemy = "1 day ago";
+                            if( hours <= 1.1 ) datemy = "less than hour ago";
+                            if( days <= 7.1 ) datemy = '<strong>'+datemy+'</strong>';
+                            let inlineStyle = '';
+                            if( doWeHideIrrelevant && parseInt(element.relativeWeight) < 4 ) {
+                                inlineStyle = 'id="lowRelevancy" style="display:none"';
+                                doWeShowIrrelevantCard = true;
+                            }
                             toResolve.push( { "title": element.title, "abstract": element.abstract,
-                              "date": datemy, "relevancy": element.relativeWeight+"/10 relevant" } );
+                              "date": datemy, "relevancy": element.relativeWeight+"/10 relevant",
+                              "inlineStyle": inlineStyle } );
                         } );
+
+                        let doWeSorryForResults = false;
+                        if( results[0].relativeWeight < 4 && offset == 0 ) doWeSorryForResults = true;
 
                         let paginationObj = {
                             prev_link: '#',
@@ -66,11 +80,12 @@ exports.doYourJob = function( query, offset=0 ) {
                             if( maxButtons > maxButtonsLimit ) break;
                         }
 
-                        resolve( { pubs: toResolve, numberofall: allresults, pagination: paginationObj } );
+                        resolve( { pubs: toResolve, numberofall: allresults, pagination: paginationObj,
+                          irrelevantCard1: doWeShowIrrelevantCard, irrelevantCard2: doWeSorryForResults } );
                     }
                 }
                 else {
-                    reject( "Sorry, we've encountered an error." );
+                    reject( "Sorry, there are no resuls for those words. Would you like to rephrase your query?" );
                 }
             }
 
