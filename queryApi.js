@@ -9,7 +9,7 @@ exports.doYourJob = function( query, offset=0 ) {
           {timeout: 20000}, (error, response, body) => {
 
             if( error ) {
-                reject( error );
+                reject( "Sorry, we have encountered an error." );
             }
             else {
                 let toResolve = [];
@@ -41,7 +41,7 @@ exports.doYourJob = function( query, offset=0 ) {
                             }
                             toResolve.push( { "title": element.title, "abstract": element.abstract,
                               "date": datemy, "relevancy": element.relativeWeight+"/10 relevant",
-                              "inlineStyle": inlineStyle } );
+                              "inlineStyle": inlineStyle, "server": element.server, "link": element.link } );
                         } );
 
                         let doWeSorryForResults = false;
@@ -85,7 +85,7 @@ exports.doYourJob = function( query, offset=0 ) {
                     }
                 }
                 else {
-                    reject( "Sorry, there are no resuls for those words. Would you like to rephrase your query?" );
+                    reject( JSON.parse(body).message );
                 }
             }
 
