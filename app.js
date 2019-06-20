@@ -13,20 +13,24 @@ app.set('view engine', 'handlebars');
 app.use('/assets', express.static('assets'));
 app.use(express.static(__dirname));
 
-const {shiphold} = require('ship-hold');
-const sh = shiphold({
+/*const {shiphold} = require('ship-hold');
+/*const sh = shiphold({
     host     : process.env.RDS_HOSTNAME,
     user     : process.env.RDS_USERNAME,
     password : process.env.RDS_PASSWORD,
     port     : process.env.RDS_PORT,
     database : 'postgres'
 });
-/*const sh = shiphold({
+const sh = shiphold({
     host     : '127.0.0.1',
     user     : 'crawler',
     password : 'blackseo666',
     database : 'preprint-crawls'
 });*/
+
+app.get('/preprints', function(request,response) {
+  response.render( 'preprint-homepage' );
+});
 
 app.get('/search', function (req, res) {
   
