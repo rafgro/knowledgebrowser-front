@@ -33,14 +33,16 @@ exports.doYourJob = function( query, offset=0 ) {
                             if( days <= 1.25 ) datemy = hours.toFixed(0)+" hours ago";
                             else if( days < 2 ) datemy = "1 day ago";
                             if( hours <= 1.1 ) datemy = "less than hour ago";
-                            if( days <= 7.1 ) datemy = '<strong>'+datemy+'</strong>';
+                            if( days <= 1.25 ) datemy = '<span style="color:#000000">'+datemy+'</span>';
                             let inlineStyle = '';
                             if( doWeHideIrrelevant && parseInt(element.relativeWeight) < 4 ) {
                                 inlineStyle = 'id="lowRelevancy" style="display:none"';
                                 doWeShowIrrelevantCard = true;
                             }
+                            let relevantMy = element.relativeWeight+"/10 relevant";
+                            if( parseInt(element.relativeWeight) >= 8 ) relevantMy = '<span style="color:#000000">'+relevantMy+'</span>';
                             toResolve.push( { "title": element.title, "abstract": element.abstract,
-                              "date": datemy, "relevancy": element.relativeWeight+"/10 relevant",
+                              "date": datemy, "relevancy": relevantMy,
                               "inlineStyle": inlineStyle, "server": element.server, "link": element.link } );
                         } );
 

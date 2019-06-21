@@ -29,7 +29,7 @@ const sh = shiphold({
 });*/
 
 app.get('/preprints', function(request,response) {
-  response.render( 'preprint-homepage' );
+  response.render( 'preprint-homepage', {layout: 'homepage'} );
 });
 
 app.get('/search', function (req, res) {
@@ -43,7 +43,7 @@ app.get('/search', function (req, res) {
 
       let hrend = process.hrtime(hrstart);
       res.render('preprint-search',
-        { "message": [ { "text": "Execution time: "+(hrend[1] / 1000000 + hrend[0] * 1000).toFixed(2)
+        { "message": [ { "text": "Execution time: "+(hrend[1] / 1000000 + hrend[0] * 1000).toFixed(0)
                                  +" ms. Found "+results.numberofall+" results." } ],
           "publication": results.pubs,
           "title": query+" - Knowledge Browser",
