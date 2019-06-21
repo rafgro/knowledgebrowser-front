@@ -54,11 +54,11 @@
     align-items: center;
     height: 65px;
     width: 17rem;
-    min-width: 17rem;
+    /*min-width: 17rem;*/
     max-width: 17rem;
     background: #fff;
     z-index: 100;
-    padding-left: 18px;
+    /*padding-left: 18px;*/
     border-bottom: 1px solid #f2f4f9
 }
 
@@ -78,7 +78,6 @@
 .t-header .t-header-brand-wrapper a .logo-mini {
     display: none;
     max-width: 100%;
-    width: 35px
 }
 
 .t-header .t-header-brand-wrapper a p {
@@ -94,7 +93,8 @@
         justify-content: center
     }
     .t-header .t-header-brand-wrapper a .logo-mini {
-        width: 25px
+        /*width: 25px*/
+        max-height: 64px;
     }
 }
 
@@ -104,7 +104,7 @@
     flex-direction: row;
     width: 100%;
     max-width: 100%;
-    padding: 0 2.5rem
+    padding: 0 2.5rem 0 0;
 }
 
 @media (max-width:991.98px) {
@@ -119,14 +119,20 @@
     height: 45px;
     border: none;
     background: #f5f5f5;
-    border-radius: 4px;
+    border-radius: 15px;
     transition: .3s ease-in-out;
     transition-property: background
 }
 
-@media (max-width:580px) {
+@media (max-width:1300px) {
     .t-header .t-header-content-wrapper .t-header-search-box {
-        /*display: none*/
+        width: 60%;
+    }
+}
+
+@media (max-width:800px) {
+    .t-header .t-header-content-wrapper .t-header-search-box {
+        width: 95%;
     }
 }
 
@@ -172,7 +178,7 @@
     font-weight: inherit
 }
 
-.t-header .t-header-content-wrapper .t-header-search-box .form-control::-webkit-input-placeholder {
+` .form-control::-webkit-input-placeholder {
     font-size: inherit;
     font-family: inherit;
     font-weight: inherit
@@ -905,7 +911,12 @@ footer ul li a {
 }
 
 @media (max-width:767.98px) {
-    .page-body .page-content-wrapper {
-        padding: 80px 20px 0 20px
+    .search-wrap {
+        padding: 80px 20px 0 20px !important
+    }
+}
+@media (max-width:520px) {
+    .search-wrap {
+        padding: 80px 20px 0 10px !important
     }
 }
