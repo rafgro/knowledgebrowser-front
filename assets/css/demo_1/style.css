@@ -126,7 +126,7 @@
 
 @media (max-width:580px) {
     .t-header .t-header-content-wrapper .t-header-search-box {
-        display: none
+        /*display: none*/
     }
 }
 

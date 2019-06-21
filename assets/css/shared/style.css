@@ -17920,3 +17920,57 @@ table.info-table tr th.actions {
         padding-top: 80px
     }
 }
+
+.home-header {
+    height:500px !important;
+}
+.home-header-wrapper {
+    margin:auto;
+    display:block !important;
+    width:100% !important;
+    max-width:30rem !important;
+    padding:0 !important;
+    height:auto !important;
+    border-bottom:none !important;
+}
+.big-logo {
+    display:block;
+    padding-bottom:1rem;
+    margin-top:-3rem;
+    max-width:100%;
+}
+.homepage-search {
+    width:200% !important;
+    margin-left:-10rem;
+    margin-right:-10rem;
+    border-radius:15px !important;
+    border:1px solid #b8c7ec !important;
+}
+
+@media (max-width:768px) {
+    .page-body .page-content-wrapper {
+        padding: 20px 20px !important;
+    }
+}
+
+@media (max-width:699px) {
+    .home-header {
+        height:300px !important;
+    }
+    .homepage-search {
+        width:90% !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+    }
+}
+
+@media (max-width:449px) {
+    .home-header {
+        height:250px !important;
+    }
+    .homepage-search {
+        width:100% !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+    }
+}
