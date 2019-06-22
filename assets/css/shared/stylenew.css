@@ -2527,3 +2527,7 @@ footer ul li a {
 .HORIZONTAL_SCROLL_NAV>ul {
     margin: 0 auto;
 }
+
+.nounderline a:hover{
+    text-decoration: none;
+}
