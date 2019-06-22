@@ -41,7 +41,7 @@
 {{/if}}
 
 {{#if pagination}}
-<div class="dataTables_paginate paging_simple_numbers" id="sample-data-table_paginate"><ul class="pagination"><li class="paginate_button page-item previous {{pagination_prev_activity}}" id="sample-data-table_previous"><a href="{{{pagination_prev_link}}}" class="page-link">Previous</a></li>
+<div class="dataTables_paginate paging_simple_numbers" id="sample-data-table_paginate"><ul class="pagination HORIZONTAL_SCROLL_NAV"><li class="paginate_button page-item previous {{pagination_prev_activity}}" id="sample-data-table_previous"><a href="{{{pagination_prev_link}}}" class="page-link">Previous</a></li>
 {{#each pagination}}
 <li class="paginate_button page-item {{activity}}"><a href="{{{link}}}" class="page-link">{{number}}</a></li>
 {{/each}}
