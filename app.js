@@ -28,11 +28,15 @@ const sh = shiphold({
     database : 'preprint-crawls'
 });*/
 
+app.get('/', function(request,response) {
+  response.redirect(301, 'http://knowbrofront-env.cnpkrtkwe6.us-east-2.elasticbeanstalk.com/preprints');
+});
+
 app.get('/preprints', function(request,response) {
   response.render( 'preprint-homepage', {layout: 'homepage'} );
 });
 
-app.get('/search', function (req, res) {
+app.get('/preprints/search', function (req, res) {
   
   let hrstart = process.hrtime();
 
@@ -41,12 +45,12 @@ app.get('/search', function (req, res) {
     queryApi.doYourJob( query, req.query.offset || 0 )
     .then( results => {
 
-      let hrend = process.hrtime(hrstart);
+      //let hrend = process.hrtime(hrstart);
+      //(hrend[1] / 1000000 + hrend[0] * 1000).toFixed(0)
       res.render('preprint-search',
-        { "message": [ { "text": "Execution time: "+(hrend[1] / 1000000 + hrend[0] * 1000).toFixed(0)
-                                 +" ms. Found "+results.numberofall+" results." } ],
+        { "message": [ { "text": results.numberofall+" results in the last month." } ],
           "publication": results.pubs,
-          "title": query+" - Knowledge Browser",
+          "title": query+" - kb:preprints",
           "searchquery": query,
           "pagination_prev_activity": results.pagination.prev_activity,
           "pagination_prev_link": results.pagination.prev_link,
@@ -60,22 +64,36 @@ app.get('/search', function (req, res) {
     .catch( e=> {
       res.render('preprint-search',
         { "message": [ { "text": e } ],
-        "title": query+" - Knowledge Browser",
+        "title": query+" - kb:preprints",
         "searchquery": query } );
     });
   } else {
-    res.render( 'preprint-search', { "title": "Knowledge Browser", "message": [ { "text": "Hi!" }] } );
+    res.render( 'preprint-search', { "title": "Knowledge Browser: Preprints", "message": [ { "text": "Please enter your query." }] } );
   }
 
 });
 
+app.get('/preprints/privacy-policy', function(req,res) {
+  res.render( 'preprint-sub-privacypolicy', { "title": "Privacy policy - kb:preprints" } );
+});
+app.get('/preprints/terms-of-use', function(req,res) {
+  res.render( 'preprint-sub-termsofuse', { "title": "Terms of use - kb:preprints" } );
+});
+app.get('/preprints/about', function(req,res) {
+  res.render( 'preprint-sub-about', { "title": "About - kb:preprints" } );
+});
+
 app.get('/stats', function(req,res) {
   stats.doYourJob().then( results => {
-    res.render( 'preprint-search', { "title": "Knowledge Browser", "message": results.messages } );
+    res.send( results );
   })
   .catch( e=> {
-    res.render( 'preprint-search', { "title": "Knowledge Browser", "message": [ { "text": e } ] } );
+    res.send( e.toString() );
   })
+});
+
+app.get('*', function(req, res){
+  res.render( 'preprint-sub-error', { "title": "Page not found - kb:preprints" } );
 });
 
 var port = process.env.PORT || 80;
