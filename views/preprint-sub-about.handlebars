@@ -1,9 +1,24 @@
 <div class="row" style="padding-bottom:1.5rem"><div class="col-md-12 equel-grid"><h1>About kb:preprints</h1></div></div>
 
 <div class="row"><div class="col-md-12 equel-grid"><div class="grid nounderline"><div class="grid-body"><div style="font-size: 14px;  padding:1rem; line-height:1.7">
-    <i>Future shock</i>, <i>Megabit bomb</i>, <i>Amusing ourselves to death</i>... Those marvelous works warned us about the forthcoming flood of information overload. Their authors did this in fear of television and tonnes of books, years before the internet explosion. Today we are facing orders of magnitude more problems: with the frequency of information retrieval, with the amount of new information, with the quality of knowledge. We need better tools to collect, dissect, and present informations.<br/><br/>
+    <!--<i>Future shock</i>, <i>Megabit bomb</i>, <i>Amusing ourselves to death</i>... Those marvelous works warned us about the forthcoming flood of information overload. Their authors did this in fear of television and tonnes of books, years before the internet explosion. Today we are facing orders of magnitude more problems: with the frequency of information retrieval, with the amount of new information, with the quality of knowledge. We need better tools to collect, dissect, and present informations.<br/><br/>
     
-    kb:preprints is the first step on a long way. We start by tackling a relatively confined problem - organization of preprints in science. It can be seen as a good model of new knowledge attribution, and as a smooth entrance into the scientific body of knowledge. However, preprints are substantially interesting on their own, and kb:preprints in the first place intends to support the use of preprints in science.<br/><br/>
+    kb:preprints is the first step on a long way. We start by tackling a relatively confined problem - organization of preprints in science. It can be seen as a good model of new knowledge attribution, and as a smooth entrance into the scientific body of knowledge. However, preprints are substantially interesting on their own, and kb:preprints in the first place intends to support the use of preprints in science.<br/><br/>-->
 
-    Contact: <a href="https://twitter.com/Ivegot99introns">@Ivegot99introns</a>
+    Knowledge Browser: Preprints (or just kb:preprints) supports dissection of new scientific discoveries.<br/><br/>
+
+    <h3>What is the goal of the project?</h3>
+    A few years ago there were only two preprint servers - arXiv and bioRxiv - but today that number has risen to a few dozen, with new ones added each year. kb:preprints has been created out of a pure need to have one place for browsing all preprints.<br/><br/>
+
+    <h3>How does it work?</h3>
+    kb:preprints collects and dissects metadata about new preprints. With NLP solutions and algorithms crafted specially for scientific texts, an index is built, which can be searched by a user. Query entered into the search engine is also treated by NLP to match various forms of the same thing (for example "gravity waves" also matches "gravitational waves"). All NLP modifications leave a trace in the form of relative relevancy, which in the end is calculated in a scale from 1 to 10. This becomes the basis of results division: preprints with relevancy from 10 to 4 are treated as relevant, with 3 are somewhat relevant, and below 3 are usually not relevant. Those three groups are shown and sorted separately by the time of posting to a preprint server.<br/><br/>
+    
+    <h3>What is the future of the project?</h3>
+    The search engine is the central feature and will be constantly improved to provide the best possible experience. There is also work in progress around discovery-specific tools, such as alerts and browsable feeds. Overall idea (and name) of Knowledge Browser broadly refers to general knowledge, and it is possible that the project will have new branches covering wider areas (it would be neat to discover not only new preprints but also all new publications!).<br/><br/>
+
+    <h3>How do you cooperate with preprint servers?</h3>
+    Crawling and indexing algorithms are executed in a very gentle way. Essentially the whole service uses a lot fewer resources than an average user, as the only downloaded information is metadata about publications added in the last few days.<br/><br/>
+
+    <h3>Who is behind the project?</h3>
+    Website is developed and maintained by Rafał Grochala. We can get in touch here: <a href="https://twitter.com/Ivegot99introns">@Ivegot99introns</a>
 </div></div></div></div></div>

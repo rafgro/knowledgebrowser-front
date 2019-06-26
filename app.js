@@ -3,7 +3,8 @@
 const express = require('express'),
       exphbs  = require('express-handlebars'),
       queryApi = require('./queryApi'),
-      stats = require('./stats');
+      stats = require('./stats'),
+      stats2 = require('./stats2');
 
 const app = express();
 
@@ -29,7 +30,7 @@ const sh = shiphold({
 });*/
 
 app.get('/', function(request,response) {
-  response.redirect(301, 'http://knowbrofront-env.cnpkrtkwe6.us-east-2.elasticbeanstalk.com/preprints');
+  response.redirect(301, 'https://knowledgebrowser.org/preprints');
 });
 
 app.get('/preprints', function(request,response) {
@@ -42,13 +43,13 @@ app.get('/preprints/search', function (req, res) {
 
   if( req.query.q !== undefined ) {
     let query = req.query.q.replace(/\+/g," ");
-    queryApi.doYourJob( query, req.query.offset || 0 )
+    queryApi.doYourJob( query, req.query.offset || 0, req.query.stats || 1 )
     .then( results => {
 
       //let hrend = process.hrtime(hrstart);
       //(hrend[1] / 1000000 + hrend[0] * 1000).toFixed(0)
       res.render('preprint-search',
-        { "message": [ { "text": results.numberofall+" results in the last month." } ],
+        { "message": [ { "text": "Found "+results.numberofall+" results, sorted by newest." } ],
           "publication": results.pubs,
           "title": query+" - kb:preprints",
           "searchquery": query,
@@ -73,11 +74,8 @@ app.get('/preprints/search', function (req, res) {
 
 });
 
-app.get('/preprints/privacy-policy', function(req,res) {
-  res.render( 'preprint-sub-privacypolicy', { "title": "Privacy policy - kb:preprints" } );
-});
-app.get('/preprints/terms-of-use', function(req,res) {
-  res.render( 'preprint-sub-termsofuse', { "title": "Terms of use - kb:preprints" } );
+app.get('/preprints/terms-and-privacy', function(req,res) {
+  res.render( 'preprint-sub-privacypolicy', { "title": "Privacy policy & Terms of use - kb:preprints" } );
 });
 app.get('/preprints/about', function(req,res) {
   res.render( 'preprint-sub-about', { "title": "About - kb:preprints" } );
@@ -90,6 +88,15 @@ app.get('/stats', function(req,res) {
   .catch( e=> {
     res.send( e.toString() );
   })
+});
+
+app.get('/stats-internal-blackseo', function(req,res) {
+  stats2.doYourJob().then( results => {
+    res.render( 'preprint-search', { "title": "Internal", "message": results } );
+  })
+  .catch( e=> {
+    res.send( e.toString() );
+  });
 });
 
 app.get('*', function(req, res){

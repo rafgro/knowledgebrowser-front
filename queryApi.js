@@ -1,11 +1,11 @@
 
 const request = require('request');
 
-exports.doYourJob = function( query, offset=0 ) {
+exports.doYourJob = function( query, offset=0, stats=1 ) {
 
     return new Promise( ( resolve, reject ) => {
 
-        request('http://knowbro-env.223darfg3a.us-east-2.elasticbeanstalk.com:3000/api/search?q='+query+'&offset='+offset+'&freshmode=1',
+        request('http://knowbro-env.223darfg3a.us-east-2.elasticbeanstalk.com:3000/api/search?q='+query+'&offset='+offset+'&stats='+stats,
           {timeout: 20000}, (error, response, body) => {
 
             if( error ) {
@@ -59,9 +59,9 @@ exports.doYourJob = function( query, offset=0 ) {
                         let intOffset = parseInt(offset);
                         let origQuery = query.replace(/ /g,'+');
                         if( intOffset == 0 ) { paginationObj.prev_link = '#'; paginationObj.prev_activity = 'disabled'; }
-                        else { paginationObj.prev_link = 'http://knowbrofront-env.cnpkrtkwe6.us-east-2.elasticbeanstalk.com/search?q='+origQuery+'&offset='+(intOffset-10); }
+                        else { paginationObj.prev_link = 'https://knowledgebrowser.org/preprints/search?q='+origQuery+'&offset='+(intOffset-10); }
                         if( intOffset+10 >= allresults ) { paginationObj.next_link = '#'; paginationObj.next_activity = 'disabled'; }
-                        else { paginationObj.next_link = 'http://knowbrofront-env.cnpkrtkwe6.us-east-2.elasticbeanstalk.com/search?q='+origQuery+'&offset='+(intOffset+10); }
+                        else { paginationObj.next_link = 'https://knowledgebrowser.org/preprints/search?q='+origQuery+'&offset='+(intOffset+10); }
                         let maxButtons = 0;
                         let maxButtonsLimit = 9;
                         let starter = 1;
@@ -73,8 +73,8 @@ exports.doYourJob = function( query, offset=0 ) {
                             let whatActivity = '';
                             if( (intOffset+10)/10 == i ) whatActivity = 'active';
                             let whatLink = '';
-                            if( i == 1 && whatActivity != 'active' ) whatLink = 'http://knowbrofront-env.cnpkrtkwe6.us-east-2.elasticbeanstalk.com/search?q='+origQuery;
-                            else if( whatActivity != 'active' ) whatLink = 'http://knowbrofront-env.cnpkrtkwe6.us-east-2.elasticbeanstalk.com/search?q='+origQuery+'&offset='+10*(i-1);
+                            if( i == 1 && whatActivity != 'active' ) whatLink = 'https://knowledgebrowser.org/preprints/search?q='+origQuery;
+                            else if( whatActivity != 'active' ) whatLink = 'https://knowledgebrowser.org/preprints/search?q='+origQuery+'&offset='+10*(i-1);
 
                             paginationObj.pages.push( { activity: whatActivity, number: i, link: whatLink } );
 
