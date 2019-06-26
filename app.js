@@ -4,7 +4,8 @@ const express = require('express'),
       exphbs  = require('express-handlebars'),
       queryApi = require('./queryApi'),
       stats = require('./stats'),
-      stats2 = require('./stats2');
+      stats2 = require('./stats2'),
+      seoSitemap = require('./seoSitemap');
 
 const app = express();
 
@@ -88,6 +89,10 @@ app.get('/stats', function(req,res) {
   .catch( e=> {
     res.send( e.toString() );
   })
+});
+
+app.get('/preprints/sitemap.xml', function(req,res) {
+  res.send( seoSitemap.xmlFile() );
 });
 
 app.get('/stats-internal-blackseo', function(req,res) {
