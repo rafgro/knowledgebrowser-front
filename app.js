@@ -118,4 +118,5 @@ var port = process.env.PORT || 80;
 app.listen(port, function () {
   let today = new Date();
   console.log(today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds()+' server listening on: '+port);
+  stats.doYourJob(); //to update default dummy stats file
 });
