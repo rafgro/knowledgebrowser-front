@@ -30,6 +30,10 @@ const sh = shiphold({
     database : 'preprint-crawls'
 });*/
 
+/*app.get('*', function(req, res){
+  res.render( 'preprint-sub-maintenance', { "title": "Maintenance - kb:preprints" } );
+});*/
+
 app.get('/', function(request,response) {
   response.redirect(301, 'https://knowledgebrowser.org/preprints');
 });
@@ -60,7 +64,8 @@ app.get('/preprints/search', function (req, res) {
           "pagination_next_link": results.pagination.next_link,
           "pagination": results.pagination.pages,
           "irrelevant_card1": results.irrelevantCard1,
-          "irrelevant_card2": results.irrelevantCard2 } );
+          "irrelevant_card2": results.irrelevantCard2,
+          "offset": req.query.offset || 0 } );
         
     })
     .catch( e=> {
