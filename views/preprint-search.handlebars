@@ -6,6 +6,13 @@
 <div class="row" style="padding-bottom:1.5rem"><div class="col-md-12 equel-grid"><small>Sorry, there are results with low relevancy only:</small></div></div>
 {{/if}}
 
+<script>
+    function expandAbstract(which) { 
+        document.getElementById('abstract-long-'+which).style.display = "block";
+        document.getElementById('abstract-short-'+which).style.display = "none";
+    }
+</script>
+
 {{#each publication}}
 <div class="row {{#if inlineStyle}}lowRelevancy{{/if}}" {{{inlineStyle}}}>
     <div class="col-md-12 equel-grid">
@@ -14,7 +21,10 @@
                 <div class="vertical-timeline-wrapper">
                     <div class="timeline-vertical dashboard-timeline">
                         <div class="row activity-log">
-                            <div class="col-12 col-md-9"><a href="{{{link}}}"><p class="log-name mathjax">{{{title}}}</p></a><div class="log-details mathjax">{{{abstract}}}</div></div>
+                            <div class="col-12 col-md-9"><a href="{{{link}}}"><p class="log-name mathjax">{{{title}}}</p></a>
+                            <div class="log-details mathjax" id="abstract-short-{{number}}">{{{abstract}}} <a href="javascript:expandAbstract({{number}})">Expand abstract.</a></div>
+                            <div class="log-details mathjax" id="abstract-long-{{number}}" style="display:none">{{{abstractFull}}}</div>
+                            </div>
                             <div class="col-12 col-md-3"><small class="log-time">{{{date}}}<br/>{{{relevancy}}}<br/>{{server}}</small></div>
                         </div>
                     </div>

@@ -25,6 +25,7 @@ exports.doYourJob = function( query, offset=0, stats=1, sort=0 ) {
                         if( results[0].relativeWeight >= 4 ) doWeHideIrrelevant = true;
                         let doWeShowIrrelevantCard = false;
 
+                        let numberOf = 0;
                         results.forEach( element => {
                             let thatDate = (new Date(element.date)).getTime();
                             let days = (today - thatDate) / 86400000;
@@ -41,9 +42,10 @@ exports.doYourJob = function( query, offset=0, stats=1, sort=0 ) {
                             }
                             let relevantMy = element.relativeWeight+"/10 relevant";
                             if( parseInt(element.relativeWeight) >= 8 ) relevantMy = '<span style="color:#000000">'+relevantMy+'</span>';
+                            numberOf += 1;
                             toResolve.push( { "title": element.title, "abstract": element.abstract,
-                              "date": datemy, "relevancy": relevantMy,
-                              "inlineStyle": inlineStyle, "server": element.server, "link": element.link } );
+                              "date": datemy, "relevancy": relevantMy, "abstractFull": element.abstractFull,
+                              "inlineStyle": inlineStyle, "server": element.server, "link": element.link, "number": numberOf } );
                         } );
 
                         let doWeSorryForResults = false;
