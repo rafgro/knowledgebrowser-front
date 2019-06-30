@@ -48,13 +48,22 @@ app.get('/preprints/search', function (req, res) {
 
   if( req.query.q !== undefined ) {
     let query = req.query.q.replace(/\+/g," ");
-    queryApi.doYourJob( query, req.query.offset || 0, req.query.stats || 1 )
+    queryApi.doYourJob( query, req.query.offset || 0, req.query.stats || 1, req.query.sort || 0 )
     .then( results => {
 
       //let hrend = process.hrtime(hrstart);
       //(hrend[1] / 1000000 + hrend[0] * 1000).toFixed(0)
+      let mainMessage = '';
+      if ((req.query.sort || 0) == 0) {
+        mainMessage = "Found "+results.numberofall+" results, showing the newest relevant preprints.";
+        mainMessage += " <a href='https://knowledgebrowser.org/preprints/search?q="+req.query.q+"&sort=1' class='sortingChanger'>Sort by relevancy only.</a>";
+      } else if (req.query.sort == 1) {
+        mainMessage = "Found "+results.numberofall+" results, sorted by relevancy.";
+        mainMessage += " <a href='https://knowledgebrowser.org/preprints/search?q="+req.query.q+"' class='sortingChanger'>Show newest relevant.</a>";
+      }
+
       res.render('preprint-search',
-        { "message": [ { "text": "Found "+results.numberofall+" results, sorted by newest." } ],
+        { "message": [ { "text": mainMessage } ],
           "publication": results.pubs,
           "title": query+" - kb:preprints",
           "searchquery": query,
@@ -65,7 +74,8 @@ app.get('/preprints/search', function (req, res) {
           "pagination": results.pagination.pages,
           "irrelevant_card1": results.irrelevantCard1,
           "irrelevant_card2": results.irrelevantCard2,
-          "offset": req.query.offset || 0 } );
+          "offset": req.query.offset || 0,
+          "sort": req.query.sort || 0 } );
         
     })
     .catch( e=> {
