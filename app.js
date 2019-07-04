@@ -5,7 +5,8 @@ const express = require('express'),
       queryApi = require('./queryApi'),
       stats = require('./stats'),
       stats2 = require('./stats2'),
-      seoSitemap = require('./seoSitemap');
+      seoSitemap = require('./seoSitemap'),
+      feedGenerator = require('./feedGenerator');
 
 const app = express();
 
@@ -42,48 +43,58 @@ app.get('/preprints', function(request,response) {
   response.render( 'preprint-homepage', {layout: 'homepage'} );
 });
 
+
+app.get('/preprints/last-week', function(request,response) {
+  response.render( 'preprint-weekfeed', {"title": "Last week in science - kb:preprints"} );
+});
+
 app.get('/preprints/search', function (req, res) {
   
   let hrstart = process.hrtime();
 
   if( req.query.q !== undefined ) {
-    let query = req.query.q.replace(/\+/g," ");
-    queryApi.doYourJob( query, req.query.offset || 0, req.query.stats || 1, req.query.sort || 0 )
-    .then( results => {
+    if( req.query.q.includes('science') || req.query.q.includes('discoveries') || req.query.q.includes('inventions')
+        || req.query.q.includes('scientific') ) {
+      res.render('preprint-weekfeed', {"message":[{"text":"We are showing you the summary of preprints in the last week, because your query suggests general request."}],"title": "Last week in science - kb:preprints"});
+    } else {
+      let query = req.query.q.replace(/\+/g," ");
+      queryApi.doYourJob( query, req.query.offset || 0, req.query.stats || 1, req.query.sort || 0 )
+      .then( results => {
 
-      //let hrend = process.hrtime(hrstart);
-      //(hrend[1] / 1000000 + hrend[0] * 1000).toFixed(0)
-      let mainMessage = '';
-      if ((req.query.sort || 0) == 0) {
-        mainMessage = "Found "+results.numberofall+" results, showing the newest relevant preprints.";
-        mainMessage += " <a href='https://knowledgebrowser.org/preprints/search?q="+req.query.q+"&sort=1' class='sortingChanger'>Sort by relevancy only.</a>";
-      } else if (req.query.sort == 1) {
-        mainMessage = "Found "+results.numberofall+" results, sorted by relevancy.";
-        mainMessage += " <a href='https://knowledgebrowser.org/preprints/search?q="+req.query.q+"' class='sortingChanger'>Show newest relevant.</a>";
-      }
+        //let hrend = process.hrtime(hrstart);
+        //(hrend[1] / 1000000 + hrend[0] * 1000).toFixed(0)
+        let mainMessage = '';
+        if ((req.query.sort || 0) == 0) {
+          mainMessage = "Found "+results.numberofall+" results, showing the newest relevant preprints.";
+          mainMessage += " <a href='https://knowledgebrowser.org/preprints/search?q="+req.query.q+"&sort=1' class='sortingChanger'>Sort by relevancy only.</a>";
+        } else if (req.query.sort == 1) {
+          mainMessage = "Found "+results.numberofall+" results, sorted by relevancy.";
+          mainMessage += " <a href='https://knowledgebrowser.org/preprints/search?q="+req.query.q+"' class='sortingChanger'>Show newest relevant.</a>";
+        }
 
-      res.render('preprint-search',
-        { "message": [ { "text": mainMessage } ],
-          "publication": results.pubs,
+        res.render('preprint-search',
+          { "message": [ { "text": mainMessage } ],
+            "publication": results.pubs,
+            "title": query+" - kb:preprints",
+            "searchquery": query,
+            "pagination_prev_activity": results.pagination.prev_activity,
+            "pagination_prev_link": results.pagination.prev_link,
+            "pagination_next_activity": results.pagination.next_activity,
+            "pagination_next_link": results.pagination.next_link,
+            "pagination": results.pagination.pages,
+            "irrelevant_card1": results.irrelevantCard1,
+            "irrelevant_card2": results.irrelevantCard2,
+            "offset": req.query.offset || 0,
+            "sort": req.query.sort || 0 } );
+          
+      })
+      .catch( e=> {
+        res.render('preprint-search',
+          { "message": [ { "text": e } ],
           "title": query+" - kb:preprints",
-          "searchquery": query,
-          "pagination_prev_activity": results.pagination.prev_activity,
-          "pagination_prev_link": results.pagination.prev_link,
-          "pagination_next_activity": results.pagination.next_activity,
-          "pagination_next_link": results.pagination.next_link,
-          "pagination": results.pagination.pages,
-          "irrelevant_card1": results.irrelevantCard1,
-          "irrelevant_card2": results.irrelevantCard2,
-          "offset": req.query.offset || 0,
-          "sort": req.query.sort || 0 } );
-        
-    })
-    .catch( e=> {
-      res.render('preprint-search',
-        { "message": [ { "text": e } ],
-        "title": query+" - kb:preprints",
-        "searchquery": query } );
-    });
+          "searchquery": query } );
+      });
+    }
   } else {
     res.render( 'preprint-search', { "title": "Knowledge Browser: Preprints", "message": [ { "text": "Please enter your query." }] } );
   }
@@ -97,8 +108,17 @@ app.get('/preprints/about', function(req,res) {
   res.render( 'preprint-sub-about', { "title": "About - kb:preprints" } );
 });
 
-app.get('/stats', function(req,res) {
+app.get('/generate/stats', function(req,res) {
   stats.doYourJob().then( results => {
+    res.send( results );
+  })
+  .catch( e=> {
+    res.send( e.toString() );
+  })
+});
+
+app.get('/generate/weekfeed', function(req,res) {
+  feedGenerator.doYourJob('week').then( results => {
     res.send( results );
   })
   .catch( e=> {

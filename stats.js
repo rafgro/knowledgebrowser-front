@@ -71,7 +71,7 @@ Promise.map(urlList, function(url) {
         if (iterate == 1) toWrite += " preprints";
         toWrite += '</span></a>';
     });
-    toWrite += '</center></div></div></div></div></div></div>';
+    toWrite += '</center></div><a style="color: #565656; padding-right: 25px; padding-bottom: .5rem !important; padding-top: .5rem !important; display: block !important; border-top: 1px solid #f2f4f9 !important; text-align:right; width:100%" href="https://knowledgebrowser.org/preprints/last-week"><small>browse...</small></a></div></div></div></div></div>';
 
     toWrite += '<div class="row"><div class="col-12 col-md-8 equel-grid"><div class="grid homepage-grid"><div class="grid-body py-3"><p class="card-title ml-n1">most popular preprint servers</p></div><div class="table-responsive"><table class="table table-hover table-sm"><thead><tr class="solid-header"><th colspan="2" class="pl-4"> </th><th>last month</th><th>last week <i class="mdi mdi-menu-down"></i></th><th>newest</th></tr></thead><tbody>';
     let limit = 0;
