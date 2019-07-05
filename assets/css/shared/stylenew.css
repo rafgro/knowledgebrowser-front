@@ -2326,7 +2326,7 @@ table:not(.table-dark) thead tr.solid-header th {
         max-width: 100%
     }
     .page-body .page-content-wrapper {
-        padding: 20px 20px;
+        padding: 20px 10px;
         min-width: 100vw;
         margin-left: 0;
         transition-duration: .2s;
@@ -2511,8 +2511,81 @@ table thead tr th {
 .sortingChanger {
     float: right;
 }
+
 @media (max-width:768px) {
     .sortingChanger {
         float: none;
+    }
+}
+
+.blue-button {
+    box-shadow: 0 0 2px 0 rgba(0,0,0,.2);
+    padding: 7px 20px 6px 20px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    background-color: #1da1f2;
+    border-color: #1da1f2;
+    text-align: center;
+    vertical-align: middle;
+    margin:5px;
+    border-radius:0.5rem;
+}
+
+@media (max-width:768px) {
+    .blue-button {
+        margin: 0px;
+    }
+}
+
+.number-in-button {
+    position: relative;
+    top: -1px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #fff !important;
+    color: #212529;
+    padding: .45rem 1rem;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: .25rem;
+    margin-left:0.5rem;
+}
+
+.browse-bottom {
+    color: #565656;
+    padding-right: 25px;
+    padding-bottom: .5rem !important;
+    padding-top: .5rem !important;
+    display: block !important;
+    border-top: 1px solid #f2f4f9 !important;
+    text-align:right;
+    width:100%;
+}
+
+.longer-text-div {
+    font-size: 14px;
+    padding:1rem;
+    line-height:1.7;
+}
+
+@media (max-width:768px) {
+    .longer-text-div {
+        padding:0;
+        font-size: 13px;
+        text-align:justify;
+    }
+    .grid-body.with-text {
+        padding: 20px 15px 10px 10px;
+    }
+    .with-text h1 {
+        text-align: center;
+    }
+    .card-title {
+        text-align: center;
     }
 }

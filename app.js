@@ -55,7 +55,7 @@ app.get('/preprints/search', function (req, res) {
   if( req.query.q !== undefined ) {
     if( req.query.q.includes('science') || req.query.q.includes('discoveries') || req.query.q.includes('inventions')
         || req.query.q.includes('scientific') ) {
-      res.render('preprint-weekfeed', {"message":[{"text":"We are showing you the summary of preprints in the last week, because your query suggests general request."}],"title": "Last week in science - kb:preprints"});
+      res.render('preprint-weekfeed', {"message":[{"text":"We are showing you the summary of preprints in the last week, because your query suggests general request."}],"title": "Last week in science - kb:preprints","searchquery":query});
       let query = 'redirected: ' + req.query.q.replace(/\+/g," ");
       queryApi.doYourJob( query, req.query.offset || 0, req.query.stats || 1, req.query.sort || 0 )
         .then(() => console.log('redirected to general'))
