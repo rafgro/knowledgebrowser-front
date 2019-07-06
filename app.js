@@ -43,6 +43,16 @@ app.get('/preprints', function(request,response) {
   response.render( 'preprint-homepage', {layout: 'homepage'} );
 });
 
+/* ACCOUNT RELATED */
+app.get('/signup', function(request,response) {
+  response.render( 'register', {layout: 'pseudomodal', "title": "Sign up - kb:preprints"} );
+});
+app.get('/login', function(request,response) {
+  response.render( 'login', {layout: 'pseudomodal', "title": "Login - kb:preprints"} );
+});
+app.get('/account', function(request,response) {
+  response.render( 'account', {"title": "Account - kb:preprints"} );
+});
 
 app.get('/preprints/last-week', function(request,response) {
   response.render( 'preprint-weekfeed', {"title": "Last week in science - kb:preprints"} );
