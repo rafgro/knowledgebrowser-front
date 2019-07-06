@@ -153,4 +153,5 @@ app.listen(port, function () {
   let today = new Date();
   console.log(today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds()+' server listening on: '+port);
   stats.doYourJob(); //to update default dummy stats file
+  feedGenerator.doYourJob('week'); //to update default dummy feed file
 });

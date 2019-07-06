@@ -37,7 +37,7 @@ exports.doYourJob = function(whichJob) {
           whatWeHave.forEach((one) => {
             let up = '';
             if (iterator > 0) up = '; padding-top:2.5rem';
-            toWrite += '<h3 style="padding-bottom:0.5rem'+up+'"><a href="http://knowledgebrowser.org/preprint/search?q='+one[1].replace(/ /g,'+')+'">' + one[1].substring(0,1).toUpperCase() + one[1].substring(1) + '</a> <small>(' + queries[iterator].n + ' preprints)</small></h3>'; //head
+            toWrite += '<h3 style="padding-bottom:0.5rem'+up+'"><a href="http://knowledgebrowser.org/preprints/search?q='+one[1].replace(/ /g,'+')+'">' + one[1].substring(0,1).toUpperCase() + one[1].substring(1) + '</a> <small>(' + queries[iterator].n + ' preprints)</small></h3>'; //head
             const itsResults = JSON.parse(one[0]).results;
 
             let thatDate = (new Date(itsResults[0].date)).getTime();
