@@ -81,11 +81,20 @@ app.get('/signup', function(request,response) {
   else response.render( 'register', {layout: 'pseudomodal', "title": "Sign up - kb:preprints"} );
 });
 app.post('/signup', function(request,response) {
+  if (request.body.password != request.body.password2) {
+    response.render( 'register', {layout: 'pseudomodal', title: "Sign up - kb:preprints", error: "Provided passwords are different.", email: request.body.email } );
+  }
   userApi.signup(request.body.email, request.body.password)
     .then((r) => {
-      // user is automatically logged in
-      // show account then
-      response.redirect('/login');
+      console.log(r);
+      request.login([{email:request.body.email}], function(err) {
+        if (err) {
+          console.log(err);
+          response.render( 'login', {layout: 'pseudomodal', "title": "Login - kb:preprints", error: 'Sorry, we\'ve encountered an error.', email:request.body.email} );
+        } else {
+          response.redirect('/account');
+        }
+      })(request,response,next);
     })
     .catch((e) => {
       e = JSON.parse(e);
@@ -115,23 +124,25 @@ app.post('/login', function(request,response,next) {
   })(request, response, next);
 });
 app.get('/account', function(request,response) {
-  if (request.isAuthenticated()) response.render( 'account', {"title": "Account - kb:preprints", layout: "accountlayout"} );
+  // TODO: get info from api about user notifications
+  console.log(request.user);
+  if (request.isAuthenticated()) response.render( 'account', {"title": "Account - kb:preprints", layout: "accountlayout", username:request.user[0].email} );
   else response.redirect('/login');
 });
 app.get('/account/modify-notification', function(request,response) {
-  if (request.isAuthenticated()) response.render( 'account-modifynotification', {"title": "Modify notification - kb:preprints", layout: "accountlayout"} );
+  if (request.isAuthenticated()) response.render( 'account-modifynotification', {"title": "Modify notification - kb:preprints", layout: "accountlayout", username:request.user[0].email} );
   else response.redirect('/login');
 });
 app.get('/account/add-notification', function(request,response) {
-  if (request.isAuthenticated()) response.render( 'account-addnotification', {"title": "Add notification - kb:preprints", layout: "accountlayout"} );
+  if (request.isAuthenticated()) response.render( 'account-addnotification', {"title": "Add notification - kb:preprints", layout: "accountlayout", username:request.user[0].email} );
   else response.redirect('/login');
 });
 app.get('/account/settings', function(request,response) {
-  if (request.isAuthenticated()) response.render( 'account-settings', {"title": "Settings - kb:preprints", layout: "accountlayout"} );
+  if (request.isAuthenticated()) response.render( 'account-settings', {"title": "Settings - kb:preprints", layout: "accountlayout", username:request.user[0].email} );
   else response.redirect('/login');
 });
 app.get('/account/contact', function(request,response) {
-  if (request.isAuthenticated()) response.render( 'account-contact', {"title": "Contact - kb:preprints", layout: "accountlayout"} );
+  if (request.isAuthenticated()) response.render( 'account-contact', {"title": "Contact - kb:preprints", layout: "accountlayout", username:request.user[0].email} );
   else response.redirect('/login');
 });
 app.get('/logout', function(req, res){
