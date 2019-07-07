@@ -3,10 +3,13 @@
 const express = require('express'),
       exphbs  = require('express-handlebars'),
       queryApi = require('./queryApi'),
+      userApi = require('./userApi'),
       stats = require('./stats'),
       stats2 = require('./stats2'),
       seoSitemap = require('./seoSitemap'),
-      feedGenerator = require('./feedGenerator');
+      feedGenerator = require('./feedGenerator'),
+      passport = require('passport'),
+      session = require('express-session');
 
 const app = express();
 
@@ -15,6 +18,13 @@ app.set('view engine', 'handlebars');
 
 app.use('/assets', express.static('assets'));
 app.use(express.static(__dirname));
+
+const localStrategy = require('passport-local').Strategy;
+app.use(require('cookie-parser')());
+app.use(session({ secret: 'keyboard cat', resave: false, saveUninitialized: false, cookie:{secure:false, withCredentials: true} }));
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(require('body-parser').urlencoded({ extended: true }));
 
 /*const {shiphold} = require('ship-hold');
 /*const sh = shiphold({
@@ -43,15 +53,75 @@ app.get('/preprints', function(request,response) {
   response.render( 'preprint-homepage', {layout: 'homepage'} );
 });
 
+/* will go out to passport js */
+passport.use('local', new localStrategy({passReqToCallback: true, usernameField: 'email'}, (req, username, password, done) => {
+  userApi.login(username, password)
+    .then(() => {
+      console.log('logged');
+      done(null, [{email: username}])
+    })
+    .catch((e) => {
+      console.log('not logged');
+      console.log(e);
+      done(e);
+    });
+  })
+);
+passport.serializeUser(function(user, done) {
+  done(null, user);
+});
+passport.deserializeUser(function(user, done) {
+  done(null, user);
+});
+ 
+
 /* ACCOUNT RELATED */
 app.get('/signup', function(request,response) {
-  response.render( 'register', {layout: 'pseudomodal', "title": "Sign up - kb:preprints"} );
+  if (request.isAuthenticated()) response.redirect('/account');
+  else response.render( 'register', {layout: 'pseudomodal', "title": "Sign up - kb:preprints"} );
+});
+app.post('/signup', function(request,response) {
+  userApi.signup(request.body.email, request.body.password)
+    .then((r) => {
+      // user is automatically logged in
+      // show account then
+      response.redirect('/login');
+    })
+    .catch((e) => {
+      e = JSON.parse(e);
+      response.render( 'register', {layout: 'pseudomodal', title: "Sign up - kb:preprints", error: e.message, email: request.body.email } );
+    });
+  //response.render( 'register', {layout: 'pseudomodal', "title": "Sign up - kb:preprints"} );
 });
 app.get('/login', function(request,response) {
-  response.render( 'login', {layout: 'pseudomodal', "title": "Login - kb:preprints"} );
+  if (request.isAuthenticated()) response.redirect('/account');
+  else response.render( 'login', {layout: 'pseudomodal', "title": "Login - kb:preprints"} );
+});
+app.post('/login', function(request,response,next) {
+  passport.authenticate('local', function(err, user, info) {
+    if (err) {
+      response.render( 'login', {layout: 'pseudomodal', "title": "Login - kb:preprints", error: JSON.parse(err).message, email:request.body.email } );
+      return 0;
+    }
+    request.session.cookie.maxAge = 30 * 24 * 60 * 60 * 1000;
+    request.login(user, function(err) {
+      if (err) {
+        console.log(err);
+        response.render( 'login', {layout: 'pseudomodal', "title": "Login - kb:preprints", error: 'Sorry, we\'ve encountered an error.', email:request.body.email } );
+      } else {
+        response.redirect('/account');
+      }
+    });
+  })(request, response, next);
 });
 app.get('/account', function(request,response) {
-  response.render( 'account', {"title": "Account - kb:preprints"} );
+  //if (request.isAuthenticated()) response.render( 'account', {"title": "Account - kb:preprints"} );
+  //else response.redirect('/login');
+  response.render( 'account', {"title": "Account - kb:preprints", layout: "accountlayout"} );
+});
+app.get('/logout', function(req, res){
+  req.logout();
+  res.redirect('/');
 });
 
 app.get('/preprints/last-week', function(request,response) {

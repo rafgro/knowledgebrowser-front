@@ -8,9 +8,12 @@
                 <div class="grid-body" style="padding: 60px 15px;position: relative;">
                     <div class="row">
                         <div class="col-lg-7 col-md-8 col-sm-9 col-12 mx-auto" style="position: unset;">
-                            <form action="https://knowledgebrowser.org/account" method="POST">
+                            {{#if error}}<div class="modal-footer" style="top: 5px !important;max-height: 30px;">
+                                <small class="text-muted" style="color:#b50000 !important">{{error}}</small>
+                            </div>{{/if}}
+                            <form action="login" method="POST">
                                 <div style="margin-bottom: 20px;"><input type="text" class="form-control"
-                                        placeholder="E-mail" style="border-radius: 25px;" name="email"></div>
+                                        placeholder="E-mail" style="border-radius: 25px;" name="email" {{#if email}}value="{{{email}}}"{{/if}}></div>
                                 <div style="margin-bottom: 20px;"><input type="password" class="form-control"
                                         placeholder="Password" style="border-radius: 25px;" name="password"></div>
                                 <button type="submit" class="modal-button">Login</button>
