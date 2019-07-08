@@ -1,7 +1,9 @@
 <div class="content-viewport">
+    {{#if error}}<div class="row" style="padding-bottom:2rem">{{error}}</div>{{/if}}
     <div class="row" style="padding-bottom:2rem">
         <h5>Add notification</h5>
     </div>
+    <form action="http://localhost/account/add-notification" method="POST">
     <div class="row" style="padding-bottom:2rem">
         <div class="col-12 equel-grid">
             <div class="grid">
@@ -14,13 +16,13 @@
                                     <div class="col-md-3 showcase_text_area"><label for="inputType1"
                                             style="margin-top: 0.25rem;">Keywords</label></div>
                                     <div class="col-md-9 showcase_content_area"><input type="text" class="form-control"
-                                            id="inputType1" value="Keyword 1, Keyword 2"
-                                            style="background-color: #f6f7f9;border: 1px solid #f0f2f5;"></div>
+                                            id="inputType1" value="{{#if forWhat}}{{forWhat}}{{else}}Keyword{{/if}}"
+                                            style="background-color: #f6f7f9;border: 1px solid #f0f2f5;" name="keyword"></div>
                                 </div>
                                 <div class="form-group row showcase_row_area">
                                     <div class="col-md-3 showcase_text_area"><label for="inputType1"
                                             style="margin-top: 0.25rem;">Minimal relevance</label></div>
-                                    <div class="col-md-9 showcase_content_area"><select class="custom-select" style="background-color: #f6f7f9;border: 1px solid #f0f2f5;">
+                                    <div class="col-md-9 showcase_content_area"><select class="custom-select" style="background-color: #f6f7f9;border: 1px solid #f0f2f5;" name="relevance">
                                             <option value="3">3/10</option>
                                             <option value="4" selected>4/10 - The most universal, used in search engine</option>
                                             <option value="5">5/10</option>
@@ -34,20 +36,20 @@
                                 <div class="form-group row showcase_row_area">
                                     <div class="col-md-3 showcase_text_area"><label for="inputType1"
                                             style="margin-top: 0.25rem;">Frequency</label></div>
-                                    <div class="col-md-9 showcase_content_area"><select class="custom-select" style="background-color: #f6f7f9;border: 1px solid #f0f2f5;">
-                                            <option value="asap" selected>As soon as possible</option>
-                                            <option value="day">Max one a day</option>
-                                            <option value="days">Max one a few days</option>
-                                            <option value="week">Max one a week</option>
-                                            <option value="weeks">Max one a few weeks</option>
+                                    <div class="col-md-9 showcase_content_area"><select class="custom-select" style="background-color: #f6f7f9;border: 1px solid #f0f2f5;" name="frequency">
+                                            <option value="1" selected>As soon as possible</option>
+                                            <option value="2">Max one a day</option>
+                                            <option value="3">Max one a few days</option>
+                                            <option value="4">Max one a week</option>
+                                            <option value="5">Max one a few weeks</option>
                                         </select></div>
                                 </div>
                                 <div class="form-group row showcase_row_area">
                                     <div class="col-md-3 showcase_text_area"><label for="inputType1"
                                             style="margin-top: 0.25rem;">Adress</label></div>
                                     <div class="col-md-9 showcase_content_area"><input type="text" class="form-control"
-                                            id="inputType1" value="test@test.test"
-                                            style="background-color: #f6f7f9;border: 1px solid #f0f2f5;"></div>
+                                            id="inputType1" value="{{{username}}}"
+                                            style="background-color: #f6f7f9;border: 1px solid #f0f2f5;" name="toWhatMail" disabled></div>
                                 </div>
                             </div>
                         </div>
@@ -58,9 +60,10 @@
     </div>
     <div class="row" style="padding-bottom:2rem">
         <div class="col-12" style="text-align:center">
-            <div class="btn social-btn btn-behance btn-lg" style="margin-right:1rem"><i
-                    class="mdi mdi-plus"></i>Add</div>
-            <button type="button" class="btn btn-link">Cancel</button>
+            <button type="submit" class="btn social-btn btn-behance btn-lg" style="margin-right:1rem"><i
+                    class="mdi mdi-plus"></i>Add</button>
+            <a href="http://localhost/account"><div type="button" class="btn btn-link">Cancel</div></a>
         </div>
     </div>
+    </form>
 </div>

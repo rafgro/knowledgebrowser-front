@@ -1,28 +1,48 @@
 <div class="content-viewport">
+    {{#each messages}}
+    <div class="row"><div class="alert alert-{{color}}" role="alert" style="width:100%">{{content}}</div></div>
+    {{/each}}
     <div class="row" style="padding-bottom:2rem"><h5>Your notifications about new preprints</h5></div>
+    {{#if error}}<div class="row" style="padding-bottom:2rem"><small>{{error}}</small></div>{{/if}}
+    {{#each notifications}}
     <div class="row" style="padding-bottom:2rem">
         <div class="col-12 equel-grid">
             <div class="grid">
-                <p class="grid-header" style="background: #f9fafb;font-weight: 300;">Notification set up 7th June 2019 11:46 UTC</p>
+                <p class="grid-header" style="background: #f9fafb;font-weight: 300;">Notification set up {{createdText}}</p>
                 <div class="grid-body" style="padding-bottom:1rem">
                     <div class="item-wrapper" style="padding-bottom:1rem">
-                        <button type="button" class="btn btn-outline-primary">Keyword 1</button>
-                        <button type="button" class="btn btn-outline-primary">Keyword 2</button>
-                        <button class="btn action-btn btn-refresh btn-outline-primary btn-rounded component-flat"><i class="text-info mdi mdi-plus"></i></button>
+                        <button type="button" class="btn btn-outline-primary">{{queryText}}</button>
+                        <!--<button type="button" class="btn btn-outline-primary">Keyword 2</button>
+                        <button class="btn action-btn btn-refresh btn-outline-primary btn-rounded component-flat"><i class="text-info mdi mdi-plus"></i></button>-->
                     </div>
                     <div class="item-wrapper" style="padding-bottom:1rem">
-                        <span class="badge badge-inverse-primary"><span class="status-indicator rounded-indicator bg-primary"></span>Minimum 4/10 relevant</span>
-                        <span class="badge badge-inverse-primary"><span class="status-indicator rounded-indicator bg-primary"></span>Sent as soon as possible</span>
-                        <span class="badge badge-inverse-primary"><span class="status-indicator rounded-indicator bg-primary"></span>To: test@test.test</span>
+                        <span class="badge badge-inverse-primary"><span class="status-indicator rounded-indicator bg-primary"></span>Minimum {{minrelevance}}/10 relevant</span>
+                        <span class="badge badge-inverse-primary"><span class="status-indicator rounded-indicator bg-primary"></span>Sent {{frequencyText}}</span>
+                        <span class="badge badge-inverse-primary"><span class="status-indicator rounded-indicator bg-primary"></span>To: {{where}}</span>
                     </div>
                     <div class="item-wrapper" style="padding-bottom:1rem; width:100%; text-align:center">
-                        <a href="account/modify-notification"><div class="btn btn-primary has-icon" style="margin-right:1rem"><i class="mdi mdi-tune-vertical"></i>Modify</div></a>
-                        <button type="button" class="btn btn-link">Delete</button>
+                        <form action="http://localhost/account/modify-notification" method="POST" style="display: inline;">
+                            <input type="hidden" name="created" value="{{created}}">
+                            <input type="hidden" name="query" value="{{query}}">
+                            <input type="hidden" name="minrelevance" value="{{minrelevance}}">
+                            <input type="hidden" name="frequency" value="{{frequency}}">
+                            <input type="hidden" name="where" value="{{where}}">
+                            <input type="hidden" name="hiddenid" value="{{{hiddenid}}}">
+                            <input type="hidden" name="purpose" value="0">
+                            <button type="submit" class="btn btn-primary has-icon" style="margin-right:1rem"><i class="mdi mdi-tune-vertical"></i>Modify</button>
+                        </form>
+                        <form action="http://localhost/account/delete-notification" method="POST" style="display: inline;">
+                            <input type="hidden" name="query" value="{{query}}">
+                            <input type="hidden" name="hiddenid" value="{{{hiddenid}}}">
+                            <input type="hidden" name="purpose" value="0">
+                            <button type="submit" class="btn btn-link">Delete</button>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    {{/each}}
     <div class="row" style="padding-bottom:2rem">
         <div class="col-12" style="text-align:right">
             <a href="account/add-notification"><div class="btn social-btn btn-behance btn-lg"><i class="mdi mdi-plus"></i>Add notification</div></a>

@@ -1,12 +1,13 @@
 <div class="content-viewport">
+    {{#if error}}<div class="row" style="padding-bottom:2rem">{{error}}</div>{{/if}}
     <div class="row" style="padding-bottom:2rem">
         <h5>Modify notification</h5>
     </div>
+    <form action="http://localhost/account/modify-notification" method="POST">
     <div class="row" style="padding-bottom:2rem">
         <div class="col-12 equel-grid">
             <div class="grid">
-                <p class="grid-header" style="background: #f9fafb;font-weight: 300;">Notification set up 7th June 2019
-                    11:46 UTC</p>
+                <p class="grid-header" style="background: #f9fafb;font-weight: 300;">Notification set up {{createdText}}</p>
                 <div class="grid-body" style="padding-bottom:1rem">
                     <div class="item-wrapper" style="padding-bottom:1rem">
                         <div class="row">
@@ -15,40 +16,40 @@
                                     <div class="col-md-3 showcase_text_area"><label for="inputType1"
                                             style="margin-top: 0.25rem;">Keywords</label></div>
                                     <div class="col-md-9 showcase_content_area"><input type="text" class="form-control"
-                                            id="inputType1" value="Keyword 1, Keyword 2"
-                                            style="background-color: #f6f7f9;border: 1px solid #f0f2f5;"></div>
+                                            id="inputType1" value="{{query}}"
+                                            style="background-color: #f6f7f9;border: 1px solid #f0f2f5;" name="query"></div>
                                 </div>
                                 <div class="form-group row showcase_row_area">
                                     <div class="col-md-3 showcase_text_area"><label for="inputType1"
                                             style="margin-top: 0.25rem;">Minimal relevance</label></div>
-                                    <div class="col-md-9 showcase_content_area"><select class="custom-select" style="background-color: #f6f7f9;border: 1px solid #f0f2f5;">
-                                            <option value="3">3/10</option>
-                                            <option value="4" selected>4/10 - The most universal, used in search engine</option>
-                                            <option value="5">5/10</option>
-                                            <option value="6">6/10</option>
-                                            <option value="7">7/10 - Exact match in title or strong presence in abstract</option>
-                                            <option value="8">8/10</option>
-                                            <option value="9">9/10</option>
-                                            <option value="10">10/10 - Exact match in title, mutliple occurences in abstract</option>
+                                    <div class="col-md-9 showcase_content_area"><select class="custom-select" style="background-color: #f6f7f9;border: 1px solid #f0f2f5;" name="minrelevance">
+                                            <option value="3"{{#if_eq minrelevance 3}} selected{{/if_eq}}>3/10</option>
+                                            <option value="4"{{#if_eq minrelevance 4}} selected{{/if_eq}}>4/10 - The most universal, used in search engine</option>
+                                            <option value="5"{{#if_eq minrelevance 5}} selected{{/if_eq}}>5/10</option>
+                                            <option value="6"{{#if_eq minrelevance 6}} selected{{/if_eq}}>6/10</option>
+                                            <option value="7"{{#if_eq minrelevance 7}} selected{{/if_eq}}>7/10 - Exact match in title or strong presence in abstract</option>
+                                            <option value="8"{{#if_eq minrelevance 8}} selected{{/if_eq}}>8/10</option>
+                                            <option value="9"{{#if_eq minrelevance 9}} selected{{/if_eq}}>9/10</option>
+                                            <option value="10"{{#if_eq minrelevance 10}} selected{{/if_eq}}>10/10 - Exact match in title, mutliple occurences in abstract</option>
                                         </select></div>
                                 </div>
                                 <div class="form-group row showcase_row_area">
                                     <div class="col-md-3 showcase_text_area"><label for="inputType1"
                                             style="margin-top: 0.25rem;">Frequency</label></div>
-                                    <div class="col-md-9 showcase_content_area"><select class="custom-select" style="background-color: #f6f7f9;border: 1px solid #f0f2f5;">
-                                            <option value="asap" selected>As soon as possible</option>
-                                            <option value="day">Max one a day</option>
-                                            <option value="days">Max one a few days</option>
-                                            <option value="week">Max one a week</option>
-                                            <option value="weeks">Max one a few weeks</option>
+                                    <div class="col-md-9 showcase_content_area"><select class="custom-select" style="background-color: #f6f7f9;border: 1px solid #f0f2f5;" name="frequency">
+                                            <option value="1"{{#if_eq frequency 1}} selected{{/if_eq}}>As soon as possible</option>
+                                            <option value="2"{{#if_eq frequency 2}} selected{{/if_eq}}>Max one a day</option>
+                                            <option value="3"{{#if_eq frequency 3}} selected{{/if_eq}}>Max one a few days</option>
+                                            <option value="4"{{#if_eq frequency 4}} selected{{/if_eq}}>Max one a week</option>
+                                            <option value="5"{{#if_eq frequency 5}} selected{{/if_eq}}>Max one a few weeks</option>
                                         </select></div>
                                 </div>
                                 <div class="form-group row showcase_row_area">
                                     <div class="col-md-3 showcase_text_area"><label for="inputType1"
                                             style="margin-top: 0.25rem;">Adress</label></div>
                                     <div class="col-md-9 showcase_content_area"><input type="text" class="form-control"
-                                            id="inputType1" value="test@test.test"
-                                            style="background-color: #f6f7f9;border: 1px solid #f0f2f5;"></div>
+                                            id="inputType1" value="{{{where}}}"
+                                            style="background-color: #f6f7f9;border: 1px solid #f0f2f5;" name="where"></div>
                                 </div>
                             </div>
                         </div>
@@ -59,9 +60,12 @@
     </div>
     <div class="row" style="padding-bottom:2rem">
         <div class="col-12" style="text-align:center">
-            <div class="btn social-btn btn-behance btn-lg" style="margin-right:1rem"><i
-                    class="mdi mdi-checkbox-marked-circle-outline"></i>Save changes</div>
-            <button type="button" class="btn btn-link">Cancel</button>
+            <button type="submit" class="btn social-btn btn-behance btn-lg" style="margin-right:1rem"><i
+                    class="mdi mdi-checkbox-marked-circle-outline"></i>Save changes</button>
+            <a href="http://localhost/account"><div type="button" class="btn btn-link">Cancel</div></a>
         </div>
     </div>
+    <input type="hidden" name="hiddenid" value="{{{hiddenid}}}">
+    <input type="hidden" name="purpose" value="1">
+    </form>
 </div>
