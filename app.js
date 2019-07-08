@@ -77,48 +77,57 @@ passport.deserializeUser(function(user, done) {
 
 /* ACCOUNT RELATED */
 app.get('/signup', function(request,response) {
-  if (request.isAuthenticated()) response.redirect('/account');
-  else response.render( 'register', {layout: 'pseudomodal', "title": "Sign up - kb:preprints"} );
+  let forWhat = '';
+  if (request.query.for != undefined) forWhat = '?for=' + request.query.for;
+  if (request.isAuthenticated()) response.redirect('/account' + forWhat);
+  else response.render( 'register', {layout: 'pseudomodal', title: "Sign up - kb:preprints", forWhat: request.query.for } );
 });
 app.post('/signup', function(request,response) {
+  let forWhat = '';
+  if (request.query.for != undefined) forWhat = '?for=' + request.query.for;
+
   if (request.body.password != request.body.password2) {
-    response.render( 'register', {layout: 'pseudomodal', title: "Sign up - kb:preprints", error: "Provided passwords are different.", email: request.body.email } );
+    response.render( 'register', {layout: 'pseudomodal', title: "Sign up - kb:preprints", error: "Provided passwords are different.", email: request.body.email, forWhat: request.query.for } );
   }
-  userApi.signup(request.body.email, request.body.password)
+  userApi.signup(request.body.email, request.body.password, request.query.for)
     .then((r) => {
       console.log(r);
       request.login([{email:request.body.email}], function(err) {
         if (err) {
           console.log(err);
-          response.render( 'login', {layout: 'pseudomodal', "title": "Login - kb:preprints", error: 'Sorry, we\'ve encountered an error.', email:request.body.email} );
+          response.render( 'login', {layout: 'pseudomodal', "title": "Login - kb:preprints", error: 'Sorry, we\'ve encountered an error.', email:request.body.email, forWhat: request.query.for} );
         } else {
-          response.redirect('/account');
+          response.redirect('/account' + forWhat);
         }
       })(request,response,next);
     })
     .catch((e) => {
       e = JSON.parse(e);
-      response.render( 'register', {layout: 'pseudomodal', title: "Sign up - kb:preprints", error: e.message, email: request.body.email } );
+      response.render( 'register', {layout: 'pseudomodal', title: "Sign up - kb:preprints", error: e.message, email: request.body.email, forWhat: request.query.for } );
     });
   //response.render( 'register', {layout: 'pseudomodal', "title": "Sign up - kb:preprints"} );
 });
 app.get('/login', function(request,response) {
-  if (request.isAuthenticated()) response.redirect('/account');
-  else response.render( 'login', {layout: 'pseudomodal', "title": "Login - kb:preprints"} );
+  let forWhat = '';
+  if (request.query.for != undefined) forWhat = '?for=' + request.query.for;
+  if (request.isAuthenticated()) response.redirect('/account' + forWhat);
+  else response.render( 'login', {layout: 'pseudomodal', "title": "Login - kb:preprints", forWhat: request.query.for} );
 });
 app.post('/login', function(request,response,next) {
+  let forWhat = '';
+  if (request.query.for != undefined) forWhat = '?for=' + request.query.for;
   passport.authenticate('local', function(err, user, info) {
     if (err) {
-      response.render( 'login', {layout: 'pseudomodal', "title": "Login - kb:preprints", error: JSON.parse(err).message, email:request.body.email } );
+      response.render( 'login', {layout: 'pseudomodal', "title": "Login - kb:preprints", error: JSON.parse(err).message, email:request.body.email, forWhat: request.query.for } );
       return 0;
     }
     request.session.cookie.maxAge = 30 * 24 * 60 * 60 * 1000;
     request.login(user, function(err) {
       if (err) {
         console.log(err);
-        response.render( 'login', {layout: 'pseudomodal', "title": "Login - kb:preprints", error: 'Sorry, we\'ve encountered an error.', email:request.body.email } );
+        response.render( 'login', {layout: 'pseudomodal', "title": "Login - kb:preprints", error: 'Sorry, we\'ve encountered an error.', email:request.body.email, forWhat: request.query.for } );
       } else {
-        response.redirect('/account');
+        response.redirect('/account' + forWhat);
       }
     });
   })(request, response, next);
@@ -175,12 +184,13 @@ app.get('/preprints/search', function (req, res) {
         //(hrend[1] / 1000000 + hrend[0] * 1000).toFixed(0)
         let mainMessage = '';
         if ((req.query.sort || 0) == 0) {
-          mainMessage = "Found "+results.numberofall+" results, showing the newest relevant preprints.";
-          mainMessage += " <a href='https://knowledgebrowser.org/preprints/search?q="+req.query.q+"&sort=1' class='sortingChanger'>Sort by relevancy only.</a>";
+          mainMessage += "Found "+results.numberofall+" results, showing the newest relevant preprints.";
+          mainMessage += " <a href='https://knowledgebrowser.org/preprints/search?q="+req.query.q+"&sort=1'>Sort by relevancy only.</a>";
         } else if (req.query.sort == 1) {
-          mainMessage = "Found "+results.numberofall+" results, sorted by relevancy.";
-          mainMessage += " <a href='https://knowledgebrowser.org/preprints/search?q="+req.query.q+"' class='sortingChanger'>Show newest relevant.</a>";
+          mainMessage += "Found "+results.numberofall+" results, sorted by relevancy.";
+          mainMessage += " <a href='https://knowledgebrowser.org/preprints/search?q="+req.query.q+"'>Show newest relevant.</a>";
         }
+        mainMessage += '<a href="http://localhost/signup?for='+req.query.q+'" class="sortingChanger blue-button" style="margin-top:-0.5rem">Update me on new preprints</a>';
 
         res.render('preprint-search',
           { "message": [ { "text": mainMessage } ],

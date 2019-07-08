@@ -11,7 +11,7 @@
                             {{#if error}}<div class="modal-footer" style="top: 5px !important;max-height: 30px;">
                                 <small class="text-muted" style="color:#b50000 !important">{{error}}</small>
                             </div>{{/if}}
-                            <form action="login" method="POST">
+                            <form action="http://localhost/login{{#if forWhat}}?for={{{forWhat}}}{{/if}}" method="POST">
                                 <div style="margin-bottom: 20px;"><input type="text" class="form-control"
                                         placeholder="E-mail" style="border-radius: 25px;" name="email" {{#if email}}value="{{{email}}}"{{/if}}></div>
                                 <div style="margin-bottom: 20px;"><input type="password" class="form-control"
@@ -19,7 +19,7 @@
                                 <button type="submit" class="modal-button">Login</button>
                             </form>
                             <div class="modal-footer">
-                                <small class="text-muted">Don't have an account yet? <a href="https://knowledgebrowser.org/singup">Sign up</a></small>
+                                <small class="text-muted">Don't have an account yet? <a href="http://localhost/singup{{#if forWhat}}?for={{{forWhat}}}{{/if}}">Sign up</a></small>
                             </div>
                         </div>
                     </div>

@@ -23,6 +23,8 @@ exports.doYourJob = function(whichJob) {
       request('http://knowbro-env.223darfg3a.us-east-2.elasticbeanstalk.com:3000/api/terms?today='+today+'&type=a',
         (error, response, body) => {
         if (error) reject(error);
+        if (body == undefined) reject('Empty body');
+        if (body.length < 5) reject('Empty body');
         const queries = JSON.parse(body);
         
         // 2.
