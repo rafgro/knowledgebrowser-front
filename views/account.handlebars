@@ -21,7 +21,7 @@
                         <span class="badge badge-inverse-primary"><span class="status-indicator rounded-indicator bg-primary"></span>To: {{where}}</span>
                     </div>
                     <div class="item-wrapper" style="padding-bottom:1rem; width:100%; text-align:center">
-                        <form action="http://localhost/account/modify-notification" method="POST" style="display: inline;">
+                        <form action="https://knowledgebrowser.org/account/modify-notification" method="POST" style="display: inline;">
                             <input type="hidden" name="created" value="{{created}}">
                             <input type="hidden" name="query" value="{{query}}">
                             <input type="hidden" name="minrelevance" value="{{minrelevance}}">
@@ -31,7 +31,7 @@
                             <input type="hidden" name="purpose" value="0">
                             <button type="submit" class="btn btn-primary has-icon" style="margin-right:1rem"><i class="mdi mdi-tune-vertical"></i>Modify</button>
                         </form>
-                        <form action="http://localhost/account/delete-notification" method="POST" style="display: inline;">
+                        <form action="https://knowledgebrowser.org/account/delete-notification" method="POST" style="display: inline;">
                             <input type="hidden" name="query" value="{{query}}">
                             <input type="hidden" name="hiddenid" value="{{{hiddenid}}}">
                             <input type="hidden" name="purpose" value="0">

@@ -408,9 +408,9 @@ app.get('/preprints/search', function (req, res) {
           mainMessage += "Found "+results.numberofall+" results, sorted by relevancy.";
           mainMessage += " <a href='https://knowledgebrowser.org/preprints/search?q="+req.query.q+"'>Show newest relevant.</a>";
         }
-        mainMessage += '<a href="http://localhost/signup?for='+req.query.q+'" class="sortingChanger blue-button2" rel="nofollow">Update me on new preprints</a>';
+        mainMessage += '<a href="https://knowledgebrowser.org/signup?for='+req.query.q+'" class="sortingChanger blue-button2" rel="nofollow">Update me on new preprints</a>';
 
-        const bottomNotify = '<a href="http://localhost/signup?for='+req.query.q+'" class="blue-button3" rel="nofollow">Update me on new preprints</a>';
+        const bottomNotify = '<a href="https://knowledgebrowser.org/signup?for='+req.query.q+'" class="blue-button3" rel="nofollow">Update me on new preprints</a>';
 
         res.render('preprint-search',
           { "message": [ { "text": mainMessage } ],
