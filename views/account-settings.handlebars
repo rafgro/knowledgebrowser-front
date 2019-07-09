@@ -1,4 +1,8 @@
 <div class="content-viewport">
+    {{#each messages}}
+    <div class="row"><div class="alert alert-{{color}}" role="alert" style="width:100%">{{content}}</div></div>
+    {{/each}}
+    <form action="http://localhost/account/settings" method="POST">
     <div class="row" style="padding-bottom:2rem">
         <h5>Account settings</h5>
     </div>
@@ -13,26 +17,27 @@
                                 <div class="form-group row showcase_row_area">
                                     <div class="col-md-3 showcase_text_area"><label for="inputType1"
                                             style="margin-top: 0.25rem;">Current password</label></div>
-                                    <div class="col-md-9 showcase_content_area"><input type="text" class="form-control"
+                                    <div class="col-md-9 showcase_content_area"><input class="form-control"
                                             id="inputType1" type="password"
-                                            style="background-color: #f6f7f9;border: 1px solid #f0f2f5;"></div>
+                                            style="background-color: #f6f7f9;border: 1px solid #f0f2f5;" name="oldpass"></div>
                                 </div>
                                 <div class="form-group row showcase_row_area">
                                     <div class="col-md-3 showcase_text_area"><label for="inputType1"
                                             style="margin-top: 0.25rem;">New password</label></div>
-                                    <div class="col-md-9 showcase_content_area"><input type="text" class="form-control"
+                                    <div class="col-md-9 showcase_content_area"><input class="form-control"
                                             id="inputType1" type="password"
-                                            style="background-color: #f6f7f9;border: 1px solid #f0f2f5;"></div>
+                                            style="background-color: #f6f7f9;border: 1px solid #f0f2f5;" name="newpass"></div>
                                 </div>
                                 <div class="form-group row showcase_row_area">
                                     <div class="col-md-3 showcase_text_area"><label for="inputType1"
                                             style="margin-top: 0.25rem;">Repeat</label></div>
-                                    <div class="col-md-9 showcase_content_area"><input type="text" class="form-control"
+                                    <div class="col-md-9 showcase_content_area"><input class="form-control"
                                             id="inputType1" type="password"
-                                            style="background-color: #f6f7f9;border: 1px solid #f0f2f5;"></div>
+                                            style="background-color: #f6f7f9;border: 1px solid #f0f2f5;" name="newpass2"></div>
                                 </div>
                                 <div class="item-wrapper" style="width:100%; text-align:right">
-                                    <button type="button" class="btn btn-danger">Change</button>
+                                    <input type="hidden" name="purpose" value="pass">
+                                    <button type="submit" class="btn btn-danger">Change</button>
                                 </div>
                             </div>
                         </div>
@@ -41,6 +46,8 @@
             </div>
         </div>
     </div>
+    </form>
+    <form action="http://localhost/account/settings" method="POST">
     <div class="row" style="padding-bottom:2rem">
         <div class="col-12 equel-grid">
             <div class="grid">
@@ -52,19 +59,20 @@
                                 <div class="form-group row showcase_row_area">
                                     <div class="col-md-3 showcase_text_area"><label for="inputType1"
                                             style="margin-top: 0.25rem;">Current password</label></div>
-                                    <div class="col-md-9 showcase_content_area"><input type="text" class="form-control"
+                                    <div class="col-md-9 showcase_content_area"><input class="form-control"
                                             id="inputType1" type="password"
-                                            style="background-color: #f6f7f9;border: 1px solid #f0f2f5;"></div>
+                                            style="background-color: #f6f7f9;border: 1px solid #f0f2f5;" name="pass"></div>
                                 </div>
                                 <div class="form-group row showcase_row_area">
                                     <div class="col-md-3 showcase_text_area"><label for="inputType1"
                                             style="margin-top: 0.25rem;">New e-mail</label></div>
                                     <div class="col-md-9 showcase_content_area"><input type="text" class="form-control"
                                             id="inputType1"
-                                            style="background-color: #f6f7f9;border: 1px solid #f0f2f5;"></div>
+                                            style="background-color: #f6f7f9;border: 1px solid #f0f2f5;" name="newmail"></div>
                                 </div>
                                 <div class="item-wrapper" style="width:100%; text-align:right">
-                                    <button type="button" class="btn btn-danger">Change</button>
+                                    <input type="hidden" name="purpose" value="mail">
+                                    <button type="submit" class="btn btn-danger">Change</button>
                                 </div>
                             </div>
                         </div>
@@ -73,4 +81,5 @@
             </div>
         </div>
     </div>
+    </form>
 </div>

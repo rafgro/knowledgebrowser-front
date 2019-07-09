@@ -1,1 +1,0 @@
-window.onload=function(){$(".all-flags .flag-icon-background").click(function(t){var n=$(t.currentTarget).attr("title"),e=screen.width/2-320,i=screen.height/2-240;n&&window.open("flags/4x3/"+n+".svg","flag-4x3","width=640, height=480, top="+i+", left="+e)})};

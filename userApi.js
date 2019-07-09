@@ -9,7 +9,14 @@ exports.signup = function (email, pass, firstNotification) {
       }, (error, res, body) => {
       if (error) reject({ errorType: 'server', message: 'Sorry, we\'ve encountered an error.' });
       if (res.statusCode == 200) resolve('pozitive');
-      else reject(JSON.parse(body) || { errorType: 'server', message: 'Sorry, we\'ve encountered an error.' });
+      else {
+        try { 
+          const what = JSON.parse(body);
+          reject(what);
+        } catch(e) {
+          reject({ errorType: 'server', message: 'Sorry, we\'ve encountered an error.' });
+        }
+      }
     })
   });
 };
@@ -23,7 +30,14 @@ exports.login = function (email, pass, newNotification) {
       }, (error, res, body) => {
       if (error) reject({ errorType: 'server', message: 'Sorry, we\'ve encountered an error.' });
       if (res.statusCode == 200) resolve('pozitive');
-      else reject(JSON.parse(body) || { errorType: 'server', message: 'Sorry, we\'ve encountered an error.' });
+      else {
+        try { 
+          const what = JSON.parse(body);
+          reject(what);
+        } catch(e) {
+          reject({ errorType: 'server', message: 'Sorry, we\'ve encountered an error.' });
+        }
+      }
     })
   });
 };
@@ -38,7 +52,14 @@ exports.getAllNotifications = function (email) {
       if (error) reject({ errorType: 'server', message: 'Sorry, we\'ve encountered an error.' });
       if (body.length == 2) reject({ errorType: 'empty', message: 'Empty!'});
       if (res.statusCode == 200) resolve(body);
-      else reject(JSON.parse(body) || { errorType: 'server', message: 'Sorry, we\'ve encountered an error.' });
+      else {
+        try { 
+          const what = JSON.parse(body);
+          reject(what);
+        } catch(e) {
+          reject({ errorType: 'server', message: 'Sorry, we\'ve encountered an error.' });
+        }
+      }
     })
   });
 };
@@ -52,7 +73,14 @@ exports.addOneNotification = function (account, keywords, relevance, frequency, 
       }, (error, res, body) => {
       if (error) reject({ errorType: 'server', message: 'Sorry, we\'ve encountered an error.' });
       if (res.statusCode == 200) resolve(body);
-      else reject(JSON.parse(body) || { errorType: 'server', message: 'Sorry, we\'ve encountered an error.' });
+      else {
+        try { 
+          const what = JSON.parse(body);
+          reject(what);
+        } catch(e) {
+          reject({ errorType: 'server', message: 'Sorry, we\'ve encountered an error.' });
+        }
+      }
     })
   });
 };
@@ -66,7 +94,14 @@ exports.updateNotification = function (account, keywords, relevance, frequency, 
       }, (error, res, body) => {
       if (error) reject({ errorType: 'server', message: 'Sorry, we\'ve encountered an error.' });
       if (res.statusCode == 200) resolve(body);
-      else reject(JSON.parse(body) || { errorType: 'server', message: 'Sorry, we\'ve encountered an error.' });
+      else {
+        try { 
+          const what = JSON.parse(body);
+          reject(what);
+        } catch(e) {
+          reject({ errorType: 'server', message: 'Sorry, we\'ve encountered an error.' });
+        }
+      }
     })
   });
 };
@@ -80,7 +115,14 @@ exports.deleteNotification = function (account, hiddenid) {
       }, (error, res, body) => {
       if (error) reject({ errorType: 'server', message: 'Sorry, we\'ve encountered an error.' });
       if (res.statusCode == 200) resolve(body);
-      else reject(JSON.parse(body) || { errorType: 'server', message: 'Sorry, we\'ve encountered an error.' });
+      else {
+        try { 
+          const what = JSON.parse(body);
+          reject(what);
+        } catch(e) {
+          reject({ errorType: 'server', message: 'Sorry, we\'ve encountered an error.' });
+        }
+      }
     })
   });
 };
@@ -94,7 +136,14 @@ exports.confirmUser = function (key) {
       }, (error, res, body) => {
       if (error) reject({ errorType: 'server', message: 'Sorry, we\'ve encountered an error.' });
       if (res.statusCode == 200) resolve(body);
-      else reject(JSON.parse(body) || { errorType: 'server', message: 'Sorry, we\'ve encountered an error.' });
+      else {
+        try { 
+          const what = JSON.parse(body);
+          reject(what);
+        } catch(e) {
+          reject({ errorType: 'server', message: 'Sorry, we\'ve encountered an error.' });
+        }
+      }
     })
   });
 };
@@ -108,7 +157,56 @@ exports.getMailStatus = function (email) {
       }, (error, res, body) => {
       if (error) reject({ errorType: 'server', message: 'Sorry, we\'ve encountered an error.' });
       if (res.statusCode == 200) resolve(body);
-      else reject(JSON.parse(body) || { errorType: 'server', message: 'Sorry, we\'ve encountered an error.' });
+      else {
+        try { 
+          const what = JSON.parse(body);
+          reject(what);
+        } catch(e) {
+          reject({ errorType: 'server', message: 'Sorry, we\'ve encountered an error.' });
+        }
+      }
+    })
+  });
+};
+
+exports.changeMail = function (oldmail, pass, newmail) {
+  return new Promise( (resolve, reject) => {
+    request.post('http://knowbro-env.223darfg3a.us-east-2.elasticbeanstalk.com:3000/api/accounts/changeusermail',
+      {
+          form: { hey: 'ZXVUXb96JPgZVspA', oldmail, pass, newmail },
+          timeout: 5000
+      }, (error, res, body) => {
+      if (error) reject({ errorType: 'server', message: 'Sorry, we\'ve encountered an error.' });
+      if (res.statusCode == 200) resolve('pozitive');
+      else {
+        try { 
+          const what = JSON.parse(body);
+          reject(what);
+        } catch(e) {
+          reject({ errorType: 'server', message: 'Sorry, we\'ve encountered an error.' });
+        }
+      }
+    })
+  });
+};
+
+exports.changePass = function (mail, oldpass, newpass) {
+  return new Promise( (resolve, reject) => {
+    request.post('http://knowbro-env.223darfg3a.us-east-2.elasticbeanstalk.com:3000/api/accounts/changeuserpass',
+      {
+          form: { hey: 'ZXVUXb96JPgZVspA', mail, oldpass, newpass },
+          timeout: 5000
+      }, (error, res, body) => {
+      if (error) reject({ errorType: 'server', message: 'Sorry, we\'ve encountered an error.' });
+      if (res.statusCode == 200) resolve('pozitive');
+      else {
+        try { 
+          const what = JSON.parse(body);
+          reject(what);
+        } catch(e) {
+          reject({ errorType: 'server', message: 'Sorry, we\'ve encountered an error.' });
+        }
+      }
     })
   });
 };

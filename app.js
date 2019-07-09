@@ -9,7 +9,8 @@ const express = require('express'),
       seoSitemap = require('./seoSitemap'),
       feedGenerator = require('./feedGenerator'),
       passport = require('passport'),
-      session = require('express-session');
+      session = require('express-session'),
+      useragent = require('device');
 
 const app = express();
 
@@ -115,7 +116,7 @@ app.post('/signup', function(request,response) {
       })(request,response,next);
     })
     .catch((e) => {
-      e = JSON.parse(e);
+      if (typeof e != 'object') e = JSON.parse(e);
       response.render( 'register', {layout: 'pseudomodal', title: "Sign up - kb:preprints", error: e.message, email: request.body.email, forWhat: request.query.for } );
       return;
     });
@@ -137,7 +138,7 @@ app.post('/login', function(request,response,next) {
   if (request.query.for != undefined) forWhat = '?for=' + request.query.for;
   passport.authenticate('local', function(err, user, info) {
     if (err) {
-      response.render( 'login', {layout: 'pseudomodal', "title": "Login - kb:preprints", error: JSON.parse(err).message, email:request.body.email, forWhat: request.query.for } );
+      response.render( 'login', {layout: 'pseudomodal', "title": "Login - kb:preprints", error: err.message, email:request.body.email, forWhat: request.query.for } );
       return;
     }
     request.session.cookie.maxAge = 30 * 24 * 60 * 60 * 1000;
@@ -177,7 +178,7 @@ app.get('/account', function(request,response) {
     Promise.all(fewQueries)
       .then((res) => {
         // console.log(res);
-        if (res[1] == '0') {
+        if (res[1] != '1') {
           messages.push({ color:'warning', content: 'You need to confirm your mail before we can send you notifications.' });
         }
         if (res[0].length < 20) {
@@ -296,6 +297,47 @@ app.get('/account/settings', function(request,response) {
     return;
   }
 });
+app.post('/account/settings', function(request,response) {
+  if (request.isAuthenticated()) {
+    if (request.body.purpose == 'mail') {
+      if (request.user[0].email == request.body.newmail) {
+        response.render( 'account-settings', {"title": "Settings - kb:preprints", layout: "accountlayout", username:request.user[0].email, messages:[{color:'warning',content:'Old and new mail seem the same.'}]} );
+        return;
+      }
+      userApi.changeMail(request.user[0].email, request.body.pass, request.body.newmail)
+        .then(() => {
+          request.logout();
+          response.render( 'login', {layout: 'pseudomodal', "title": "Login - kb:preprints", forWhat: request.query.for, error: '<span style="color:black !important">Mail changed, please log in using new credentials.</span>'} );
+          return;
+        })
+        .catch((e) => {
+          console.log(e);
+          response.render( 'account-settings', {"title": "Settings - kb:preprints", layout: "accountlayout", username:request.user[0].email, messages:[{color:'warning',content:'Sorry, we\'ve encountered an error.'}]} );
+          return;
+        });
+    } else if (request.body.purpose == 'pass') {
+      if (request.body.newpass != request.body.newpass2) {
+        response.render( 'account-settings', {"title": "Settings - kb:preprints", layout: "accountlayout", username:request.user[0].email, messages:[{color:'warning',content:'Provided new passwords are different.'}]} );
+        return;
+      }
+      userApi.changePass(request.user[0].email, request.body.oldpass, request.body.newpass)
+        .then(() => {
+          request.logout();
+          response.render( 'login', {layout: 'pseudomodal', "title": "Login - kb:preprints", forWhat: request.query.for, error: '<span style="color:black !important">Password changed, please log in using new credentials.</span>'} );
+          return;
+        })
+        .catch((e) => {
+          console.log(e);
+          response.render( 'account-settings', {"title": "Settings - kb:preprints", layout: "accountlayout", username:request.user[0].email, messages:[{color:'warning',content:'Sorry, we\'ve encountered an error.'}]} );
+          return;
+        });
+    }
+  }
+  else {
+    response.redirect('/login');
+    return;
+  }
+});
 app.get('/account/contact', function(request,response) {
   if (request.isAuthenticated()) {
     response.render( 'account-contact', {"title": "Contact - kb:preprints", layout: "accountlayout", username:request.user[0].email} );
@@ -316,7 +358,7 @@ app.get('/logout', function(req, res){
 app.get('/account/confirm', function(request,response) {
   userApi.confirmUser(request.query.mail)
     .then(() => {
-      response.render( 'login', {layout: 'pseudomodal', "title": "Login - kb:preprints", forWhat: request.query.for, error: 'Thank you, mail confirmed!'} );
+      response.render( 'login', {layout: 'pseudomodal', "title": "Login - kb:preprints", forWhat: request.query.for, error: '<span style="color:#03a903 !important">Thank you, mail confirmed!</span>'} );
       return;
     })
     .catch((e) => {
@@ -349,8 +391,11 @@ app.get('/preprints/search', function (req, res) {
           return;
         });
     } else {
+      let stats = req.query.stats || 1;
+      if (useragent(req.headers['user-agent']).is('bot')) stats = 0;
+
       let query = req.query.q.replace(/\+/g," ");
-      queryApi.doYourJob( query, req.query.offset || 0, req.query.stats || 1, req.query.sort || 0 )
+      queryApi.doYourJob( query, req.query.offset || 0, stats, req.query.sort || 0 )
       .then( results => {
 
         //let hrend = process.hrtime(hrstart);
@@ -363,7 +408,9 @@ app.get('/preprints/search', function (req, res) {
           mainMessage += "Found "+results.numberofall+" results, sorted by relevancy.";
           mainMessage += " <a href='https://knowledgebrowser.org/preprints/search?q="+req.query.q+"'>Show newest relevant.</a>";
         }
-        mainMessage += '<a href="http://localhost/signup?for='+req.query.q+'" class="sortingChanger blue-button" style="margin-top:-0.5rem">Update me on new preprints</a>';
+        mainMessage += '<a href="http://localhost/signup?for='+req.query.q+'" class="sortingChanger blue-button2" rel="nofollow">Update me on new preprints</a>';
+
+        const bottomNotify = '<a href="http://localhost/signup?for='+req.query.q+'" class="blue-button3" rel="nofollow">Update me on new preprints</a>';
 
         res.render('preprint-search',
           { "message": [ { "text": mainMessage } ],
@@ -378,7 +425,8 @@ app.get('/preprints/search', function (req, res) {
             "irrelevant_card1": results.irrelevantCard1,
             "irrelevant_card2": results.irrelevantCard2,
             "offset": req.query.offset || 0,
-            "sort": req.query.sort || 0 } );
+            "sort": req.query.sort || 0,
+            "bottomNotify": bottomNotify } );
         return;
       })
       .catch( e=> {
