@@ -892,7 +892,8 @@ footer ul li a {
         margin-left: 0;
         transition-duration: .2s;
         transition-timing-function: ease-in-out;
-        transition-property: margin-left
+        transition-property: margin-left;
+        margin-top: 65px
     }
     .page-body .page-content-wrapper .viewport-header .breadcrumb {
         background: 0 0;

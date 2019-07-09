@@ -51,11 +51,12 @@ const sh = shiphold({
 });*/
 
 app.get('/', function(request,response) {
-  response.redirect(301, 'https://knowledgebrowser.org/preprints');
+  return response.redirect(301, 'https://knowledgebrowser.org/preprints');
 });
 
 app.get('/preprints', function(request,response) {
   response.render( 'preprint-homepage', {layout: 'homepage'} );
+  return;
 });
 
 /* will go out to passport js */
@@ -85,15 +86,14 @@ app.get('/signup', function(request,response) {
   let forWhat = '';
   if (request.query.for != undefined) forWhat = '?for=' + request.query.for;
   if (request.isAuthenticated()) {
-    response.redirect('/account' + forWhat);
-    return;
+    return response.redirect('/account' + forWhat);
   }
   else {
     response.render( 'register', {layout: 'pseudomodal', title: "Sign up - kb:preprints", forWhat: request.query.for } );
     return;
   }
 });
-app.post('/signup', function(request,response) {
+app.post('/signup', function(request,response,next) {
   let forWhat = '';
   if (request.query.for != undefined) forWhat = '?for=' + request.query.for;
 
@@ -104,16 +104,25 @@ app.post('/signup', function(request,response) {
   userApi.signup(request.body.email, request.body.password, request.query.for)
     .then((r) => {
       // console.log(r);
-      request.login([{email:request.body.email}], function(err) {
+      passport.authenticate('local', function(err, user, info) {
         if (err) {
+          console.log('1');
           console.log(err);
           response.render( 'login', {layout: 'pseudomodal', "title": "Login - kb:preprints", error: 'Sorry, we\'ve encountered an error.', email:request.body.email, forWhat: request.query.for} );
           return;
-        } else {
-          response.redirect('/account' + forWhat);
-          return;
         }
-      })(request,response,next);
+        request.session.cookie.maxAge = 30 * 24 * 60 * 60 * 1000;
+        request.login([{email:request.body.email}], function(err) {
+          if (err) {
+            console.log('2');
+            console.log(err);
+            response.render( 'login', {layout: 'pseudomodal', "title": "Login - kb:preprints", error: 'Sorry, we\'ve encountered an error.', email:request.body.email, forWhat: request.query.for} );
+            return;
+          } else {
+            return response.redirect('/account' + forWhat);
+          }
+        });
+      })(request, response, next);
     })
     .catch((e) => {
       if (typeof e != 'object') e = JSON.parse(e);
@@ -125,8 +134,7 @@ app.get('/login', function(request,response) {
   let forWhat = '';
   if (request.query.for != undefined) forWhat = '?for=' + request.query.for;
   if (request.isAuthenticated()) {
-    response.redirect('/account' + forWhat);
-    return;
+    return response.redirect('/account' + forWhat);
   }
   else {
     response.render( 'login', {layout: 'pseudomodal', "title": "Login - kb:preprints", forWhat: request.query.for} );
@@ -148,16 +156,14 @@ app.post('/login', function(request,response,next) {
         response.render( 'login', {layout: 'pseudomodal', "title": "Login - kb:preprints", error: 'Sorry, we\'ve encountered an error.', email:request.body.email, forWhat: request.query.for } );
         return;
       } else {
-        response.redirect('/account' + forWhat);
-        return;
+        return response.redirect('/account' + forWhat);
       }
     });
   })(request, response, next);
 });
 app.get('/account', function(request,response) {
   if (request.query.for != undefined) {
-    response.redirect('/account/add-notification?for=' + request.query.for);
-    return;
+    return response.redirect('/account/add-notification?for=' + request.query.for);
   }
   if (request.isAuthenticated()) {
     let messages = [];
@@ -209,8 +215,7 @@ app.get('/account', function(request,response) {
       });
   }
   else {
-    response.redirect('/login');
-    return;
+    return response.redirect('/login');
   }
 });
 app.post('/account/modify-notification', function(request,response) {
@@ -222,8 +227,7 @@ app.post('/account/modify-notification', function(request,response) {
       // console.log(request.body);
       userApi.updateNotification(request.user[0].email, request.body.query, request.body.minrelevance, request.body.frequency, request.body.where, request.body.created, request.body.hiddenid)
         .then(() => {
-          response.redirect('/account?m=sm');
-          return;
+          return response.redirect('/account?m=sm');
         })
         .catch((e) => {
           response.render( 'account-modifynotification', {"title": "Modify notification - kb:preprints", layout: "accountlayout", username:request.user[0].email, created:request.body.created, query:request.body.query, minrelevance:request.body.minrelevance, frequency:request.body.frequency, where:request.body.where, hiddenid:request.body.hiddenid, error: 'Sorry, we\'ve encountered an error.' } );
@@ -232,8 +236,7 @@ app.post('/account/modify-notification', function(request,response) {
     }
   }
   else {
-    response.redirect('/login');
-    return;
+    return response.redirect('/login');
   }
 });
 app.post('/account/delete-notification', function(request,response) {
@@ -244,8 +247,7 @@ app.post('/account/delete-notification', function(request,response) {
     } else if (request.body.purpose === '1') {
       userApi.deleteNotification(request.user[0].email, request.body.hiddenid)
         .then(() => {
-          response.redirect('/account?m=sd');
-          return;
+          return response.redirect('/account?m=sd');
         })
         .catch((e) => {
           response.render( 'account-deletenotification', {"title": "Modify notification - kb:preprints", layout: "accountlayout", username:request.user[0].email, query:request.body.query, hiddenid:request.body.hiddenid, error: 'Sorry, we\'ve encountered an error.' } );
@@ -254,8 +256,7 @@ app.post('/account/delete-notification', function(request,response) {
     }
   }
   else {
-    response.redirect('/login');
-    return;
+    return response.redirect('/login');
   }
 });
 app.get('/account/add-notification', function(request,response) {
@@ -264,8 +265,7 @@ app.get('/account/add-notification', function(request,response) {
     return;
   }
   else {
-    response.redirect('/login');
-    return;
+    return response.redirect('/login');
   }
 });
 app.post('/account/add-notification', function(request,response) {
@@ -274,8 +274,7 @@ app.post('/account/add-notification', function(request,response) {
     // console.log(request.user[0].email);
     userApi.addOneNotification(request.user[0].email, parsed.keyword, parsed.relevance, parsed.frequency, request.user[0].email)
       .then(() => {
-        response.redirect('/account?m=sc');
-        return;
+        return response.redirect('/account?m=sc');
       })
       .catch((e) => {
         response.render( 'account-addnotification', {"title": "Add notification - kb:preprints", layout: "accountlayout", username:request.user[0].email, forWhat:request.query.for, error:'Sorry, we\'ve encountered an error.'} );
@@ -283,8 +282,7 @@ app.post('/account/add-notification', function(request,response) {
       });
   }
   else {
-    response.redirect('/login');
-    return;
+    return response.redirect('/login');
   }
 });
 app.get('/account/settings', function(request,response) {
@@ -293,8 +291,7 @@ app.get('/account/settings', function(request,response) {
     return;
   }
   else {
-    response.redirect('/login');
-    return;
+    return response.redirect('/login');
   }
 });
 app.post('/account/settings', function(request,response) {
@@ -334,8 +331,7 @@ app.post('/account/settings', function(request,response) {
     }
   }
   else {
-    response.redirect('/login');
-    return;
+    return response.redirect('/login');
   }
 });
 app.get('/account/contact', function(request,response) {
@@ -344,14 +340,12 @@ app.get('/account/contact', function(request,response) {
     return;
   }
   else {
-    response.redirect('/login');
-    return;
+    return response.redirect('/login');
   }
 });
 app.get('/logout', function(req, res){
   req.logout();
-  res.redirect('/');
-  return;
+  return res.redirect('/');
 });
 
 
@@ -501,6 +495,6 @@ var port = process.env.PORT || 80;
 app.listen(port, function () {
   let today = new Date();
   console.log(today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds()+' server listening on: '+port);
-  // stats.doYourJob(); //to update default dummy stats file
-  // feedGenerator.doYourJob('week'); //to update default dummy feed file
+  stats.doYourJob(); //to update default dummy stats file
+  feedGenerator.doYourJob('week'); //to update default dummy feed file
 });
