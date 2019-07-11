@@ -202,19 +202,21 @@ app.post('/login', function(request,response,next) {
   } else {
     passport.authenticate('local', function(err, user, info) {
       if (err) {
+        console.log(err);
         response.render( 'login', {layout: 'pseudomodal', "title": "Login - kb:preprints", error: err.message, email:request.body.email, forWhat: request.query.for } );
         return;
+      } else {
+        request.session.cookie.maxAge = 30 * 24 * 60 * 60 * 1000;
+        request.login(user, function(err) {
+          if (err) {
+            console.log(err);
+            response.render( 'login', {layout: 'pseudomodal', "title": "Login - kb:preprints", error: 'Sorry, we\'ve encountered an error.', email:request.body.email, forWhat: request.query.for } );
+            return;
+          } else {
+            return response.redirect('/account' + forWhat);
+          }
+        });
       }
-      request.session.cookie.maxAge = 30 * 24 * 60 * 60 * 1000;
-      request.login(user, function(err) {
-        if (err) {
-          console.log(err);
-          response.render( 'login', {layout: 'pseudomodal', "title": "Login - kb:preprints", error: 'Sorry, we\'ve encountered an error.', email:request.body.email, forWhat: request.query.for } );
-          return;
-        } else {
-          return response.redirect('/account' + forWhat);
-        }
-      });
     })(request, response, next);
   }
 });

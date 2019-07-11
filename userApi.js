@@ -31,7 +31,6 @@ exports.login = function (email, pass, newNotification) {
       if (error) reject({ errorType: 'server', message: 'Sorry, we\'ve encountered an error.' });
       if (res.statusCode == 200) resolve('pozitive');
       else {
-        console.log(what);
         try { 
           const what = JSON.parse(body);
           reject(what);
