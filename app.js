@@ -11,9 +11,11 @@ const express = require('express'),
       passport = require('passport'),
       session = require('express-session'),
       useragent = require('device');
+const nodemailer = require('nodemailer');
 
 const app = express();
 
+app.enable('trust proxy');
 app.engine('handlebars', exphbs({
   helpers: {
     if_eq: function(a, b, opts) { if(a == b) { return opts.fn(this); } else { return opts.inverse(this); } }
@@ -101,6 +103,10 @@ app.post('/signup', function(request,response,next) {
     response.render( 'register', {layout: 'pseudomodal', title: "Sign up - kb:preprints", error: "Provided passwords are different.", email: request.body.email, forWhat: request.query.for } );
     return;
   }
+  if (request.body.password.length < 6) {
+    response.render( 'register', {layout: 'pseudomodal', title: "Sign up - kb:preprints", error: "Please enter password longer than 5 characters.", email: request.body.email, forWhat: request.query.for } );
+    return;
+  }
   userApi.signup(request.body.email, request.body.password, request.query.for)
     .then((r) => {
       // console.log(r);
@@ -130,6 +136,52 @@ app.post('/signup', function(request,response,next) {
       return;
     });
 });
+// 1 - get forgotten without query, accessible from login
+// 2 - post forgotten to api which send email
+// 3 - get forgotten with query, clicked by mail
+// 4 - post forgotten to api with query
+app.get('/forgotten-password', function(request,response) {
+  if (request.query.key == undefined) {
+    // 1
+    response.render( 'forgotten', {layout: 'pseudomodal', "title": "Forgotten password - kb:preprints"} );
+    return;
+  } else {
+    // 3
+    response.render( 'forgotten2', {layout: 'pseudomodal', "title": "Forgotten password - kb:preprints", error: '<span style="color:black !important">Enter your new password.</span>', appendix:'?key='+request.query.key } );
+    return;
+  }
+});
+app.post('/forgotten-password', function(request,response) {
+  if (request.query.key == undefined) {
+    // 2
+    userApi.forgottenPassword(request.body.email)
+    .then(() => {
+      response.render( 'forgotten', {layout: 'pseudomodal', "title": "Forgotten password - kb:preprints", error: '<span style="color:black !important">Mail sent.</span>'} );
+      return;
+    })
+    .catch((e) => {
+      response.render( 'forgotten', {layout: 'pseudomodal', "title": "Forgotten password - kb:preprints", error: 'Sorry, we\'ve encountered an error.'} );
+      return;
+    });
+  } else {
+    // 4
+    if (request.body.pass != request.body.pass2) {
+      response.render( 'forgotten2', {layout: 'pseudomodal', "title": "Forgotten password - kb:preprints", error: 'Provided passwords are different.', appendix:'?key='+request.query.key} );
+      return;
+    } else  {
+      userApi.forgottenPassword2(request.query.key, request.body.pass)
+      .then(() => {
+        response.render( 'login', {layout: 'pseudomodal', "title": "Login - kb:preprints", error: '<span style="color:black !important">Password changed, please log in using new credentials.</span>'} );
+        return;
+      })
+      .catch((e) => {
+        response.render( 'forgotten2', {layout: 'pseudomodal', "title": "Forgotten password - kb:preprints", error: 'Sorry, we\'ve encountered an error.', appendix:'?key='+request.query.key} );
+        return;
+      });
+    }
+  }
+});
+
 app.get('/login', function(request,response) {
   let forWhat = '';
   if (request.query.for != undefined) forWhat = '?for=' + request.query.for;
@@ -144,22 +196,27 @@ app.get('/login', function(request,response) {
 app.post('/login', function(request,response,next) {
   let forWhat = '';
   if (request.query.for != undefined) forWhat = '?for=' + request.query.for;
-  passport.authenticate('local', function(err, user, info) {
-    if (err) {
-      response.render( 'login', {layout: 'pseudomodal', "title": "Login - kb:preprints", error: err.message, email:request.body.email, forWhat: request.query.for } );
-      return;
-    }
-    request.session.cookie.maxAge = 30 * 24 * 60 * 60 * 1000;
-    request.login(user, function(err) {
+  if (request.body.email.length < 1 || request.body.password.length < 1) {
+    response.render( 'login', {layout: 'pseudomodal', "title": "Login - kb:preprints", error: 'Please enter your credentials.', forWhat: request.query.for } );
+    return;
+  } else {
+    passport.authenticate('local', function(err, user, info) {
       if (err) {
-        console.log(err);
-        response.render( 'login', {layout: 'pseudomodal', "title": "Login - kb:preprints", error: 'Sorry, we\'ve encountered an error.', email:request.body.email, forWhat: request.query.for } );
+        response.render( 'login', {layout: 'pseudomodal', "title": "Login - kb:preprints", error: err.message, email:request.body.email, forWhat: request.query.for } );
         return;
-      } else {
-        return response.redirect('/account' + forWhat);
       }
-    });
-  })(request, response, next);
+      request.session.cookie.maxAge = 30 * 24 * 60 * 60 * 1000;
+      request.login(user, function(err) {
+        if (err) {
+          console.log(err);
+          response.render( 'login', {layout: 'pseudomodal', "title": "Login - kb:preprints", error: 'Sorry, we\'ve encountered an error.', email:request.body.email, forWhat: request.query.for } );
+          return;
+        } else {
+          return response.redirect('/account' + forWhat);
+        }
+      });
+    })(request, response, next);
+  }
 });
 app.get('/account', function(request,response) {
   if (request.query.for != undefined) {
@@ -343,6 +400,32 @@ app.get('/account/contact', function(request,response) {
     return response.redirect('/login');
   }
 });
+app.post('/account/contact', function(request, response) {
+  const transport = nodemailer.createTransport({
+    host: 'ssd3.linuxpl.com',
+    port: 587,
+    auth: {
+      user: 'hello@knowbrowser.org',
+      pass: 'X4k2MfRCmvh63kak!',
+    },
+  });
+
+  const mailOptions = {
+    from: '"kb:preprints" <hello@knowledgebrowser.org>',
+    to: 'grochala.rafal@protonmail.com',
+    subject: 'Feedback from user '+request.user[0].email,
+    text: request.body.message,
+    html: request.body.message,
+  };
+
+  transport.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      return console.log(error);
+    }
+    console.log(info);
+    response.render( 'account-contact', {"title": "Contact - kb:preprints", layout: "accountlayout", username:request.user[0].email, sent:1} );
+  });
+});
 app.get('/logout', function(req, res){
   req.logout();
   return res.redirect('/');
@@ -367,12 +450,10 @@ app.get('/preprints/last-week', function(request,response) {
 });
 
 app.get('/preprints/search', function (req, res) {
-  
-  let hrstart = process.hrtime();
 
   if( req.query.q !== undefined ) {
     if( req.query.q.includes('science') || req.query.q.includes('discoveries') || req.query.q.includes('inventions')
-        || req.query.q.includes('scientific') ) {
+      || req.query.q.includes('scientific') ) {
       res.render('preprint-weekfeed', {"message":[{"text":"We are showing you the summary of preprints in the last week, because your query suggests general request."}],"title": "Last week in science - kb:preprints","searchquery":query});
       let query = 'redirected: ' + req.query.q.replace(/\+/g," ");
       queryApi.doYourJob( query, req.query.offset || 0, req.query.stats || 1, req.query.sort || 0 )
@@ -406,6 +487,9 @@ app.get('/preprints/search', function (req, res) {
 
         const bottomNotify = '<a href="https://knowledgebrowser.org/signup?for='+req.query.q+'" class="blue-button3" rel="nofollow">Update me on new preprints</a>';
 
+        let anynoindex = null;
+        if (req.query.q.includes(' ')) anynoindex = 1;
+
         res.render('preprint-search',
           { "message": [ { "text": mainMessage } ],
             "publication": results.pubs,
@@ -420,7 +504,8 @@ app.get('/preprints/search', function (req, res) {
             "irrelevant_card2": results.irrelevantCard2,
             "offset": req.query.offset || 0,
             "sort": req.query.sort || 0,
-            "bottomNotify": bottomNotify } );
+            "bottomNotify": bottomNotify,
+            "anynoindex": anynoindex } );
         return;
       })
       .catch( e=> {

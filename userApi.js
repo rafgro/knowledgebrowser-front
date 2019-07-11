@@ -31,6 +31,7 @@ exports.login = function (email, pass, newNotification) {
       if (error) reject({ errorType: 'server', message: 'Sorry, we\'ve encountered an error.' });
       if (res.statusCode == 200) resolve('pozitive');
       else {
+        console.log(what);
         try { 
           const what = JSON.parse(body);
           reject(what);
@@ -195,6 +196,48 @@ exports.changePass = function (mail, oldpass, newpass) {
     request.post('http://knowbro-env.223darfg3a.us-east-2.elasticbeanstalk.com:3000/api/accounts/changeuserpass',
       {
           form: { hey: 'ZXVUXb96JPgZVspA', mail, oldpass, newpass },
+          timeout: 5000
+      }, (error, res, body) => {
+      if (error) reject({ errorType: 'server', message: 'Sorry, we\'ve encountered an error.' });
+      if (res.statusCode == 200) resolve('pozitive');
+      else {
+        try { 
+          const what = JSON.parse(body);
+          reject(what);
+        } catch(e) {
+          reject({ errorType: 'server', message: 'Sorry, we\'ve encountered an error.' });
+        }
+      }
+    })
+  });
+};
+
+exports.forgottenPassword = function (mail) {
+  return new Promise( (resolve, reject) => {
+    request.post('http://knowbro-env.223darfg3a.us-east-2.elasticbeanstalk.com:3000/api/accounts/forgottenpass1',
+      {
+          form: { hey: 'ZXVUXb96JPgZVspA', mail },
+          timeout: 5000
+      }, (error, res, body) => {
+      if (error) reject({ errorType: 'server', message: 'Sorry, we\'ve encountered an error.' });
+      if (res.statusCode == 200) resolve('pozitive');
+      else {
+        try { 
+          const what = JSON.parse(body);
+          reject(what);
+        } catch(e) {
+          reject({ errorType: 'server', message: 'Sorry, we\'ve encountered an error.' });
+        }
+      }
+    })
+  });
+};
+
+exports.forgottenPassword2 = function (key, pass) {
+  return new Promise( (resolve, reject) => {
+    request.post('http://knowbro-env.223darfg3a.us-east-2.elasticbeanstalk.com:3000/api/accounts/forgottenpass2',
+      {
+          form: { hey: 'ZXVUXb96JPgZVspA', key, pass },
           timeout: 5000
       }, (error, res, body) => {
       if (error) reject({ errorType: 'server', message: 'Sorry, we\'ve encountered an error.' });
