@@ -24,8 +24,14 @@ exports.doYourJob = function(whichJob) {
         (error, response, body) => {
         if (error) reject(error);
         if (body == undefined) reject('Empty body');
-        if (body.length < 5) reject('Empty body');
-        const queries = JSON.parse(body);
+        if (body.length < 25) reject('Empty body');
+        let queries = [];
+        try {
+          queries = JSON.parse(body);
+        } catch(e) {
+          reject(e);
+        }
+        if (queries.length < 5) reject('Empty body');
         
         // 2.
         const toAsk = queries.map(val => val.t);
@@ -39,8 +45,13 @@ exports.doYourJob = function(whichJob) {
           whatWeHave.forEach((one) => {
             let up = '';
             if (iterator > 0) up = '; padding-top:2.5rem';
-            toWrite += '<h3 style="padding-bottom:0.5rem'+up+'"><a href="https://knowledgebrowser.org/preprints/search?q='+one[1].replace(/ /g,'+')+'">' + one[1].substring(0,1).toUpperCase() + one[1].substring(1) + '</a></h3><small>' + queries[iterator].n + ' preprints</small>'; //head
-            const itsResults = JSON.parse(one[0]).results;
+            toWrite += '<h3 style="padding-bottom:0.25rem'+up+'"><a href="https://knowledgebrowser.org/preprints/search?q='+one[1].replace(/ /g,'+')+'">' + one[1].substring(0,1).toUpperCase() + one[1].substring(1) + '</a></h3><small style="padding-bottom:0.5rem">' + queries[iterator].n + ' preprints</small>'; //head
+            let itsResults = null;
+            try {
+              itsResults = JSON.parse(one[0]).results;
+            } catch(e) {
+              reject(e);
+            }
 
             let thatDate = (new Date(itsResults[0].date)).getTime();
             let days = (dateNow - thatDate) / 86400000;
