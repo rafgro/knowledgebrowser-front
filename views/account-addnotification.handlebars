@@ -12,12 +12,16 @@
                     <div class="item-wrapper" style="padding-bottom:1rem">
                         <div class="row">
                             <div class="col-md-9 mx-auto">
-                                <div class="form-group row showcase_row_area">
+                                <div class="form-group row showcase_row_area" style="margin-bottom: 0.5em !important;">
                                     <div class="col-md-3 showcase_text_area"><label for="inputType1"
                                             style="margin-top: 0.25rem;">Keywords</label></div>
                                     <div class="col-md-9 showcase_content_area"><input type="text" class="form-control"
-                                            id="inputType1" value="{{#if forWhat}}{{forWhat}}{{else}}Keyword{{/if}}"
+                                            id="inputType1" {{#if forWhat}}value="{{forWhat}}"{{else}}placeholder="keywords"{{/if}}
                                             style="background-color: #f6f7f9;border: 1px solid #f0f2f5;" name="keyword"></div>
+                                </div>
+                                <div class="form-group row showcase_row_area">
+                                    <div class="col-md-3 showcase_text_area"> </div>
+                                    <div class="col-md-9 showcase_content_area"><small>Separate keywords by comma (,) to combine many results in one notification.<br/>Example: nlp, text mining, knowledge extraction.</small></div>
                                 </div>
                                 <div class="form-group row showcase_row_area">
                                     <div class="col-md-3 showcase_text_area"><label for="inputType1"

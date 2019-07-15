@@ -11,7 +11,9 @@
                 <p class="grid-header" style="background: #f9fafb;font-weight: 300;">Notification set up {{createdText}}</p>
                 <div class="grid-body" style="padding-bottom:1rem">
                     <div class="item-wrapper" style="padding-bottom:1rem">
-                        <button type="button" class="btn btn-outline-primary">{{queryText}}</button>
+                        {{#each queries}}
+                        <button type="button" class="btn btn-outline-primary">{{text}}</button>
+                        {{/each}}
                         <!--<button type="button" class="btn btn-outline-primary">Keyword 2</button>
                         <button class="btn action-btn btn-refresh btn-outline-primary btn-rounded component-flat"><i class="text-info mdi mdi-plus"></i></button>-->
                     </div>
