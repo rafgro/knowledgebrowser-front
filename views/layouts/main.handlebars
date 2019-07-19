@@ -7,5 +7,18 @@
 
   gtag('config', 'UA-142710357-1');
   gtag('config', 'AW-730537328');
+
+  function gtag_report_conversion(url) {
+    var callback = function () {
+      if (typeof(url) != 'undefined') {
+        window.location = url;
+      }
+    };
+    gtag('event', 'conversion', {
+        'send_to': 'AW-730537328/HWDiCKiIhaYBEPC6rNwC',
+        'event_callback': callback
+    });
+    /*return false;*/
+  }
 </script>
 </head><body><body class="header-fixed"><!-- partial:partials/_header.html --><nav class="t-header"><div class="t-header-brand-wrapper"><a href="https://knowledgebrowser.org/preprints"><img class="logo" src="../assets/images/kb-preprints.png" alt="Logo"> <img class="logo-mini" src="../assets/images/kb-preprints-mini.png" alt="Logo"></a></div><div class="t-header-content-wrapper"><div class="t-header-content"><form action="https://knowledgebrowser.org/preprints/search" method="GET" class="t-header-search-box"><div class="input-group"><div class="input-group-prepend"><div class="input-group-text"><i class="mdi mdi-magnify"></i></div></div><input type="text" class="form-control" id="inlineFormInputGroup" value="{{searchquery}}" autocomplete="off" name="q"></div></form><ul class="nav ml-auto"><li class="nav-item dropdown"><a class="nav-link" href="https://knowledgebrowser.org/account" id="appsDropdown" data-toggle="dropdown" aria-expanded="false"><i class="mdi mdi-apps mdi-1x"></i></a></li></ul></div></div></nav><!-- partial --><div class="page-body"><!-- partial --><div class="page-content-wrapper search-wrap"><div class="page-content-wrapper-inner"><div class="content-viewport">{{{body}}}</div></div><!-- content viewport ends --><!-- partial:partials/_footer.html --><footer class="footer"><div class="row"><div class="col-sm-6 text-center text-sm-right order-sm-1"><ul class="text-gray"><li><a href="https://knowledgebrowser.org/preprints/about">About</a></li><li><a href="https://knowledgebrowser.org/preprints/terms-and-privacy">Terms &amp; Privacy</a></li><li><li>|</li><a href="https://knowledgebrowser.org/login" rel="nofollow">Login</a></li></ul></div><div class="col-sm-6 text-center text-sm-left mt-3 mt-sm-0"><small class="text-muted d-block">kb:preprints © 2019</small></div></div></footer><!-- partial --></div><!-- page content ends --></div></body></html>

@@ -51,8 +51,8 @@ server.get('/search', (req, res) => {
             mainMessage += `Found ${results.numberofall} results, sorted by relevancy.`;
             mainMessage += ` <a href='https://knowledgebrowser.org/preprints/search?q=${req.query.q}'>Show newest relevant.</a>`;
           }
-          mainMessage += `<a href="https://knowledgebrowser.org/signup?for=${req.query.q}" class="sortingChanger blue-button2" rel="nofollow">Update me on new preprints</a>`;
-          const bottomNotify = `<a href="https://knowledgebrowser.org/signup?for=${req.query.q}" class="blue-button3" rel="nofollow">Update me on new preprints</a>`;
+          mainMessage += `<a href="https://knowledgebrowser.org/signup?for=${req.query.q}" class="sortingChanger blue-button2" rel="nofollow" onClick="gtag_report_conversion()">Update me on new preprints</a>`;
+          const bottomNotify = `<a href="https://knowledgebrowser.org/signup?for=${req.query.q}" class="blue-button3" rel="nofollow" onClick="gtag_report_conversion()">Update me on new preprints</a>`;
 
           // seo fix: noindex duplicates with spaces instead of pluses
           let anynoindex = null;

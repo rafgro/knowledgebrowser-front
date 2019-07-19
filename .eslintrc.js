@@ -23,6 +23,7 @@ module.exports = {
         "eqeqeq": "off", // for working with parameters in urls without bothering with parsing
         "no-console": "off", // we are not using any special loggers
         "object-curly-newline": "off",
-        "func-names": "off"
+        "func-names": "off",
+        "prefer-promise-reject-errors": "off" // did not want to rewrite error system
     }
 };
