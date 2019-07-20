@@ -38,8 +38,9 @@ exports.doYourJob = function (whichJob) {
           Promise.map(toAsk, (query) => {
             return request.getAsync(`http://knowbro-env.223darfg3a.us-east-2.elasticbeanstalk.com:3000/api/search?q=${query}&stats=0&span=168&sort=1`).spread((_response2, body2) => [body2, query]);
           }).then((whatWeHave) => {
-            let toWrite = '{{#each message}}<div class="row" style="padding-bottom:2rem"><div class="col-md-12 equel-grid"><small style="width:100%">{{{text}}}</small></div></div>{{/each}}';
-            toWrite += '<h2 style="padding-bottom:2rem">Last week in science - most popular topics mentioned by preprints</h2>';
+            resolve(JSON.toString(whatWeHave));
+            const timestamp = `${today} ${date.getUTCHours()}:${date.getUTCMinutes()}`;
+            let toWrite = `<!-- ${timestamp} -->{{#each message}}<div class="row" style="padding-bottom:2rem"><div class="col-md-12 equel-grid"><small style="width:100%">{{{text}}}</small></div></div>{{/each}}<h2 style="padding-bottom:2rem">Last week in science - most popular topics mentioned by preprints</h2>`;
             let iterator = 0;
             whatWeHave.forEach((one) => {
               let up = '';
@@ -63,7 +64,7 @@ exports.doYourJob = function (whichJob) {
                   if (hours <= 1.1) timeAgo = 'less than hour ago';
                   if (days <= 1.25) timeAgo = `<span style="color:#000000">${timeAgo}</span>`;
 
-                  toWrite += `<div class="row"><div class="col-md-12 equel-grid"><div class="grid"><div class="grid-body search-result"><div class="vertical-timeline-wrapper"><div class="timeline-vertical dashboard-timeline"><div class="row activity-log"><div class="col-12 col-md-9"><a href="${itsResults[i].link}"><p class="log-name mathjax">${itsResults[i].title}</p></a><div class="log-details mathjax">${itsResults[i].abstract}</div></div><div class="col-12 col-md-3"><small class="log-time"><span style="color:#000000">${timeAgo}</span><br/>${itsResults[i].server}</small></div></div></div></div></div></div></div></div>`;
+                  toWrite += `<div class="row"><div class="col-md-12 equel-grid"><div class="grid"><div class="grid-body search-result"><div class="vertical-timeline-wrapper"><div class="timeline-vertical dashboard-timeline"><div class="row activity-log"><div class="col-12 col-md-9"><a href="${itsResults[i].link}"><p class="log-name mathjax">${itsResults[i].title.replace(/\{\{/g, '\\{\\{').replace(/\}\}/g, '\\}\\}')}</p></a><div class="log-details mathjax">${itsResults[i].abstract.replace(/\{\{/g, '\\{\\{').replace(/\}\}/g, '\\}\\}')}</div></div><div class="col-12 col-md-3"><small class="log-time"><span style="color:#000000">${timeAgo}</span><br/>${itsResults[i].server}</small></div></div></div></div></div></div></div></div>`;
                 }
               }
 

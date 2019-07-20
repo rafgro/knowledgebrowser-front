@@ -26,27 +26,13 @@ server.get('/stats-internal-blackseo', (req, res) => {
 // Generating static files
 
 server.get('/generate/stats', (req, res) => {
-  stats.doYourJob()
-    .then((results) => {
-      res.send(results);
-      return;
-    })
-    .catch((e) => {
-      res.send(e.toString());
-      return;
-    });
+  stats.doYourJob();
+  res.send('Started job');
 });
 
 server.get('/generate/weekfeed', (req, res) => {
-  feedGenerator.doYourJob('week')
-    .then((results) => {
-      res.send(results);
-      return;
-    })
-    .catch((e) => {
-      res.send(e.toString());
-      return;
-    });
+  feedGenerator.doYourJob('week');
+  res.send('Started job');
 });
 
 // SEO responses
