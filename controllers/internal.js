@@ -27,8 +27,9 @@ server.get('/stats-internal-blackseo', (req, res) => {
 // Generating static files
 
 server.get('/generate/stats', (req, res) => {
-  stats.doYourJob();
-  res.send('Started job');
+  stats.doYourJob()
+    .then(r => res.send(r))
+    .catch(e => res.send(e));
 });
 
 server.get('/generate/weekfeed', (req, res) => {
