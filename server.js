@@ -4,6 +4,7 @@ const config = require('./config');
 
 const stats = require('./stats');
 const feedGenerator = require('./feedGenerator');
+const allFeeds = require('./config/feeds');
 
 async function startServer() {
   const server = express();
@@ -20,6 +21,10 @@ async function startServer() {
     // initial generators
     stats.doYourJob();
     feedGenerator.doYourJob('week');
+    allFeeds.listOfFeeds.forEach((v, index) => {
+      // eslint-disable-next-line no-unused-vars
+      setTimeout(_ => feedGenerator.doYourJob(v.name), 3000 * index);
+    });
   });
 }
 

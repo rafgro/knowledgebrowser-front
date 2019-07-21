@@ -4,6 +4,7 @@ const generalExpress = require('express');
 const useragent = require('device');
 
 const queryApi = require('../queryApi');
+const allFeeds = require('../config/feeds');
 
 const server = Router();
 
@@ -14,11 +15,18 @@ server.get('/', (request, response) => {
   return;
 });
 
-// General science feed of the last week
+// Feeds
 
 server.get('/last-week', (request, response) => {
   response.render('preprint-weekfeed', { title: 'Last week in science - kb:preprints' });
   return;
+});
+
+allFeeds.listOfFeeds.forEach((v) => {
+  server.get(`/last-week/${v.name}`, (request, response) => {
+    response.render(`preprint-weekfeed-${v.name}`, { title: `Last week in ${v.name} - kb:preprints` });
+    return;
+  });
 });
 
 // Search engine

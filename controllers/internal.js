@@ -6,6 +6,7 @@ const stats = require('../stats');
 const stats2 = require('../stats2');
 const feedGenerator = require('../feedGenerator');
 const seoSitemap = require('../seoSitemap');
+const allFeeds = require('../config/feeds');
 
 const server = Router();
 
@@ -32,6 +33,10 @@ server.get('/generate/stats', (req, res) => {
 
 server.get('/generate/weekfeed', (req, res) => {
   feedGenerator.doYourJob('week');
+  allFeeds.listOfFeeds.forEach((v, index) => {
+    // eslint-disable-next-line no-unused-vars
+    setTimeout(_ => feedGenerator.doYourJob(v.name), 3000 * index);
+  });
   res.send('Started job');
 });
 
